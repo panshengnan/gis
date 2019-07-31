@@ -1,8 +1,10 @@
 package com.cgwx.dao;
 
 import com.cgwx.data.entity.GisOrderInfo;
-import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+@Mapper
 public interface GisOrderInfoMapper {
     int insert(GisOrderInfo record);
 
