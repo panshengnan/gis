@@ -7,15 +7,18 @@
     <result column="layer_name" property="layerName" jdbcType="VARCHAR" />
     <result column="sld_path" property="sldPath" jdbcType="VARCHAR" />
     <result column="style_name" property="styleName" jdbcType="VARCHAR" />
+    <result column="legend" property="legend" jdbcType="VARCHAR" />
   </resultMap>
   <insert id="insert" parameterType="com.cgwx.data.entity.GisProductLayerInfo" >
     insert into gis_product_layer_info (product_id, single_id, layer_name, 
-      sld_path, style_name)
+      sld_path, style_name, legend
+      )
     values (#{productId,jdbcType=VARCHAR}, #{singleId,jdbcType=VARCHAR}, #{layerName,jdbcType=VARCHAR}, 
-      #{sldPath,jdbcType=VARCHAR}, #{styleName,jdbcType=VARCHAR})
+      #{sldPath,jdbcType=VARCHAR}, #{styleName,jdbcType=VARCHAR}, #{legend,jdbcType=VARCHAR}
+      )
   </insert>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select product_id, single_id, layer_name, sld_path, style_name
+    select product_id, single_id, layer_name, sld_path, style_name, legend
     from gis_product_layer_info
   </select>
 </mapper>

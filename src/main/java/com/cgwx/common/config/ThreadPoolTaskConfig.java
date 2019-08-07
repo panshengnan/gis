@@ -11,10 +11,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableAsync
 public class ThreadPoolTaskConfig {
 
-    private static final int corePoolSize = 30;       		// 核心线程数（默认线程数）
-    private static final int maxPoolSize = 300;			    // 最大线程数
+    private static final int corePoolSize = 8;       		// 核心线程数（默认线程数）
+    private static final int maxPoolSize = 8;			    // 最大线程数
     private static final int keepAliveTime = 10;			// 允许线程空闲时间（单位：默认为秒）
-    private static final int queueCapacity = 200;			// 缓冲队列数
+    private static final int queueCapacity = 20;			// 缓冲队列数
     private static final String threadNamePrefix = "Async-Service-"; // 线程池名前缀
 
     @Bean("taskExecutor") // bean的名称，默认为首字母小写的方法名

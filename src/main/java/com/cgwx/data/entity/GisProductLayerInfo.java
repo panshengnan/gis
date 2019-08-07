@@ -11,6 +11,8 @@ public class GisProductLayerInfo {
 
     private String styleName;
 
+    private String legend;
+
     public String getProductId() {
         return productId;
     }
@@ -49,5 +51,13 @@ public class GisProductLayerInfo {
 
     public void setStyleName(String styleName) {
         this.styleName = styleName == null ? null : styleName.trim();
+    }
+
+    public String getLegend() {
+        return legend;
+    }
+
+    public void setLegend(String legend) {
+        this.legend = legend == null ? null : legend.trim();
     }
 }
