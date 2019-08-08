@@ -15,7 +15,7 @@ public interface GisAdvancedProductShpInfoMapper {
             "        image_file,sensor,acquisitio, \n" +
             "       num_channel,chan_type,islands, \n" +
             "        cloud_cover, block_id \n"+
-            "FROM   pdm_advanced_product_shp_info\n" +
+            "FROM   gis_advanced_product_shp_info\n" +
             " WHERE   product_id = #{productId}"
     })
     @Results({@Result(

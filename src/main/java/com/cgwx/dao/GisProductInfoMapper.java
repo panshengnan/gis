@@ -12,30 +12,30 @@ public interface GisProductInfoMapper {
     int insert(GisProductInfo record);
 
     List<GisProductInfo> selectAll();
-    @Select({"SELECT distinct client_name\nFROM pdm_product_info\nWHERE client_name like  '%${clientName}%' and client_name <> '' "})
+    @Select({"SELECT distinct client_name\nFROM gis_product_info\nWHERE client_name like  '%${clientName}%' and client_name <> '' "})
     List<String> selectClientNameList(@Param("clientName") String var1);
 
-    @Select({"SELECT distinct deliver_name\nFROM pdm_product_info\nWHERE deliver_name like  '%${deliverName}%'  and deliver_name <> '' "})
+    @Select({"SELECT distinct deliver_name\nFROM gis_product_info\nWHERE deliver_name like  '%${deliverName}%'  and deliver_name <> '' "})
     List<String> selectDeliverNameList(@Param("deliverName") String var1);
 
-    @Select({"SELECT producer\nFROM pdm_product_info\nWHERE producer like  '%${producer}%' and producer <> '' order by producer collate \"C\" "})
+    @Select({"SELECT producer\nFROM gis_product_info\nWHERE producer like  '%${producer}%' and producer <> '' order by producer collate \"C\" "})
     List<String> selectProducerList(@Param("producer") String var1);
 
     @Select({"SELECT product_type\n" +
-            " FROM pdm_product_info\n" +
+            " FROM gis_product_info\n" +
             "WHERE product_id = #{productId}"
     })
     int selectProductTypeByProductId(@Param("productId") String productId);
 
     @Select({"SELECT product_description\n" +
-            " FROM pdm_product_info\n" +
+            " FROM gis_product_info\n" +
             "WHERE product_id = #{productId}"
     })
     String selectProductDescriptionByProductId(@Param("productId") String productId);
 
     @Select("<script>"
             +"SELECT  r.product_type, r.product_description, r.product_name, r.product_id, i.industry\n" +
-            "FROM pdm_product_info  r , pdm_themetic_product_info i \n" +
+            "FROM gis_product_info  r , gis_themetic_product_info i \n" +
             "WHERE  1=1 and r.product_id =i.product_id \n" +
             "<if test='null!= productName &amp; !\"\".equals(productName)'>"
             + "and r.product_name like CONCAT('%',#{productName},'%') "
@@ -75,7 +75,7 @@ public interface GisProductInfoMapper {
 
     @Select("<script>"
             +"SELECT  r.product_type, r.product_description, r.product_name, r.product_id\n" +
-            "FROM pdm_product_info  r , pdm_ortho_product_info i \n" +
+            "FROM gis_product_info  r , gis_ortho_product_info i \n" +
             "WHERE  1=1 and r.product_id =i.product_id \n" +
             "<if test='null!= productName &amp; !\"\".equals(productName)'>"
             + "and r.product_name like CONCAT('%',#{productName},'%') "
@@ -112,7 +112,7 @@ public interface GisProductInfoMapper {
 
     @Select("<script>"
             +"SELECT  r.product_type, r.product_description, r.product_name, r.product_id\n" +
-            "FROM pdm_product_info  r , pdm_inlay_product_info i \n" +
+            "FROM gis_product_info  r , gis_inlay_product_info i \n" +
             "WHERE  1=1 and r.product_id =i.product_id \n" +
             "<if test='null!= productName &amp; !\"\".equals(productName)'>"
             + "and r.product_name like CONCAT('%',#{productName},'%') "
@@ -148,7 +148,7 @@ public interface GisProductInfoMapper {
 
     @Select("<script>"
             +"SELECT  r.product_type, r.product_description, r.product_name, r.product_id, i.industry\n" +
-            "FROM pdm_product_info  r , pdm_subdivision_product_info i \n" +
+            "FROM gis_product_info  r , gis_subdivision_product_info i \n" +
             "WHERE  1=1 and r.product_id =i.product_id \n" +
             "<if test='null!= productName &amp; !\"\".equals(productName)'>"
             + "and r.product_name like CONCAT('%',#{productName},'%') "
@@ -187,7 +187,7 @@ public interface GisProductInfoMapper {
 
     @Select("<script>"
             +"SELECT product_id \n"+
-            "FROM pdm_product_info \n"+
+            "FROM gis_product_info \n"+
             "WHERE 1=1 \n"+
             "<if test='null!= client_name &amp; !\"\".equals(client_name)'>"
             + "and client_name like CONCAT('%',#{client_name},'%')"
@@ -200,7 +200,7 @@ public interface GisProductInfoMapper {
 
     @Select("<script>"
             +"SELECT product_name \n"+
-            "FROM pdm_product_info \n"+
+            "FROM gis_product_info \n"+
             "WHERE 1=1 \n"+
             "<if test='null!=product_id  &amp; !\"\".equals(product_id)'>"
             + "and product_id=#{product_id}"
@@ -212,7 +212,7 @@ public interface GisProductInfoMapper {
 
     @Select({"SELECT product_id, product_name, \n" +
             "          client_name, deliver_name,deliver_time\n" +
-            "            FROM pdm_product_info\n" +
+            "            FROM gis_product_info\n" +
             "            WHERE product_id = #{productId}"
     })
     @Results({@Result(
@@ -236,7 +236,7 @@ public interface GisProductInfoMapper {
     GisProductInfo selectProductDetailPart1ByProductId(@Param("productId") String productId);
     @Select({"SELECT deliver_method,produce_area, \n" +
             "          produce_time, deliver_name,deliver_time\n" +
-            "            FROM pdm_product_info\n" +
+            "            FROM gis_product_info\n" +
             "            WHERE product_id = #{productId}"
     })
     @Results({  @Result(
@@ -261,14 +261,14 @@ public interface GisProductInfoMapper {
 
 
     @Select({"SELECT deliver_method\n" +
-            " FROM pdm_product_info\n" +
+            " FROM gis_product_info\n" +
             "WHERE deliver_method like '%'  order by deliver_method collate \"C\" "
     })
     List<String> getDeliverMethodList();
 
 
     @Select({"SELECT produce_area\n" +
-            " FROM pdm_product_info\n" +
+            " FROM gis_product_info\n" +
             "WHERE produce_area like '%'  order by produce_area collate \"C\" "
     })
     List<String> getProduceAreaList();
@@ -277,7 +277,7 @@ public interface GisProductInfoMapper {
 
     @Select("<script>"
             +"SELECT product_id,product_name \n"+
-            "FROM pdm_product_info \n"+
+            "FROM gis_product_info \n"+
             "WHERE 1=1 \n"+
             "<if test='null!= client_name &amp; !\"\".equals(client_name)'>"
             + "and client_name =#{client_name}"
@@ -287,12 +287,12 @@ public interface GisProductInfoMapper {
             + "</if>"
             +"and product_id IN ("
             +"SELECT product_id\n"
-            +"            FROM pdm_themetic_product_detail_industry_info\n"
+            +"            FROM gis_themetic_product_detail_industry_info\n"
             +            "            WHERE ${where}"
             +")"
             +"and product_id IN ("
             +"SELECT product_id\n"
-            +            "            FROM pdm_themetic_product_detail_info\n"
+            +            "            FROM gis_themetic_product_detail_info\n"
             +            "            WHERE 1=1 \n"
             +"<if test='null!= producer &amp; !\"\".equals(producer)'>"
             + "and producer =#{producer}"

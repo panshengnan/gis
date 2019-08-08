@@ -13,14 +13,14 @@ public interface GisProducerInfoMapper {
     List<GisProducerInfo> selectAll();
 
     @Select("SELECT count(producer)\n" +
-            "FROM pdm_producer_info\n" +
+            "FROM gis_producer_info\n" +
             "WHERE producer like  '${producerName}' "
     )
     int selectCountByProducerName(@Param("producerName") String producerName);
 
 
     @Select("SELECT producer\n" +
-            "FROM pdm_producer_info\n" +
+            "FROM gis_producer_info\n" +
             "WHERE producer like  '%${producer}%' and producer <> '' order by producer collate \"C\" "
     )
     List<String> selectProducerList(@Param("producer") String producer);

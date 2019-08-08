@@ -13,7 +13,7 @@ public interface GisDomesticAreaInfoMapper {
     int insert(GisDomesticAreaInfo record);
 
     List<GisDomesticAreaInfo> selectAll();
-    @Select(" SELECT  area_id,area_name,ST_AsGeoJSON(area_geo)as area_geojson FROM pdm_domestic_area_info WHERE parent_area_id=#{parentId} order by area_name")
+    @Select(" SELECT  area_id,area_name,ST_AsGeoJSON(area_geo)as area_geojson FROM gis_domestic_area_info WHERE parent_area_id=#{parentId} order by area_name")
     @Results(value = {
             @Result( column="area_id",property="areaId" ),
             @Result(column="area_name", property="areaName"),

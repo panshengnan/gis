@@ -15,10 +15,10 @@ public interface GisOrthoProductInfoMapper {
     int insert(GisOrthoProductInfo record);
 
     List<GisOrthoProductInfo> selectAll();
-    @Select({"SELECT count(DISTINCT ortho.product_id) as count\n                \n            FROM pdm_ortho_product_info ortho  \n            WHERE ortho.gmt_created >=  '${currentDate}'"})
+    @Select({"SELECT count(DISTINCT ortho.product_id) as count\n                \n            FROM gis_ortho_product_info ortho  \n            WHERE ortho.gmt_created >=  '${currentDate}'"})
     int selectOrthoProductCountByDate(@Param("currentDate") String var1);
 
-    @Select({"SELECT ortho_product_directory\nFROM pdm_ortho_product_info \nWHERE  product_id = #{productId}"})
+    @Select({"SELECT ortho_product_directory\nFROM gis_ortho_product_info \nWHERE  product_id = #{productId}"})
     String selectFilePathByProductId(@Param("productId") String var1);
     @Select({"SELECT product_id,ortho_product_name,\n" +
             "        st_asgeojson(image_geo) as geo,\n" +
@@ -26,7 +26,7 @@ public interface GisOrthoProductInfoMapper {
             "       geographic_info,producer,\n" +
             "        receive_station, receive_time, swing_satellite_angle, cast(cloud_percent as VARCHAR),width_in_meters,height_in_meters,\n" +
             "        product_quality,bands,center_longitude,center_latitude \n"+
-            "FROM   pdm_ortho_product_info\n" +
+            "FROM   gis_ortho_product_info\n" +
             " WHERE   product_id = #{productId}"
     })
     @Results({@Result(
@@ -92,7 +92,7 @@ public interface GisOrthoProductInfoMapper {
 
 
     @Select({"SELECT cloud_percent\n"+
-            "FROM   pdm_ortho_product_info\n" +
+            "FROM   gis_ortho_product_info\n" +
             " WHERE   product_id = #{productId}"
     })
     boolean hasPercent (@Param("productId") String productId);
@@ -103,7 +103,7 @@ public interface GisOrthoProductInfoMapper {
             +"SELECT product_id, ortho_product_name, geographic_info,  client_name,deliever_name,\n" +
             "st_asgeojson(image_geo) as geo,producer,satellite,sensor,resolution,image_breath,size_of_tif,capture_time,\n" +
             "deliever_time\n" +
-            "FROM pdm_ortho_product_info\n" +
+            "FROM gis_ortho_product_info\n" +
             "WHERE  1=1  \n" +
             "<if test='null!= productName &amp; !\"\".equals(productName)'>"
             + "and ortho_product_name like CONCAT('%',#{productName},'%') "
@@ -190,7 +190,7 @@ public interface GisOrthoProductInfoMapper {
                                                           @Param("resolution") BigDecimal resolution, @Param("imageBreath") String imageBreath);
 
     @Select({"SELECT product_id,st_asgeojson(image_geo) as geo\n" +
-            "            FROM pdm_ortho_product_info\n"
+            "            FROM gis_ortho_product_info\n"
     })
     @Results({@Result(
             column = "geo",
@@ -203,7 +203,7 @@ public interface GisOrthoProductInfoMapper {
     List<ThemeticProductSimpleInfo> selectSimpleinfo();
     @Select("<script>"
             +"SELECT product_id,st_asgeojson(image_geo) as geo, ortho_product_name\n" +
-            "            FROM pdm_ortho_product_info  \n"+
+            "            FROM gis_ortho_product_info  \n"+
             "            WHERE 1=1 \n"+
             "<if test='null!= producer &amp; !\"\".equals(producer)'>"
             + "and producer like CONCAT('%',#{producer},'%') "
@@ -216,7 +216,7 @@ public interface GisOrthoProductInfoMapper {
             +"</if>"
             +"and product_id IN ("
             + "SELECT product_id \n" +
-            "            FROM pdm_product_info \n" +
+            "            FROM gis_product_info \n" +
             "            WHERE 1=1 \n" +
             "<if test='null!= deliver_name &amp; !\"\".equals(deliver_name)'>"
             + "and deliver_name = #{deliver_name}"
@@ -270,7 +270,7 @@ public interface GisOrthoProductInfoMapper {
     @Select("<script>"
             +"<if test='isOrtho '>"
             +"SELECT product_id,st_asgeojson(image_geo) as geo, ortho_product_name,gmt_created\n" +
-            "            FROM pdm_ortho_product_info  \n"+
+            "            FROM gis_ortho_product_info  \n"+
             "            WHERE 1=1 \n"+
             "<if test='null!= producer &amp; !\"\".equals(producer)'>"
             + "and producer like CONCAT('%',#{producer},'%') "
@@ -283,7 +283,7 @@ public interface GisOrthoProductInfoMapper {
             +"</if>"
             +"and product_id IN ("
             + "SELECT product_id \n" +
-            "            FROM pdm_product_info \n" +
+            "            FROM gis_product_info \n" +
             "            WHERE 1=1 \n" +
             "<if test='null!= deliver_name &amp; !\"\".equals(deliver_name)'>"
             + "and deliver_name = #{deliver_name}"
@@ -313,7 +313,7 @@ public interface GisOrthoProductInfoMapper {
             +"UNION"
             +"</if>"
             +" SELECT product_id,st_asgeojson(image_geo) as geo, inlay_product_name as ortho_product_name,gmt_created\n" +
-            "            FROM pdm_inlay_product_info  \n"+
+            "            FROM gis_inlay_product_info  \n"+
             "            WHERE 1=1 \n"+
             "<if test='null!= producer &amp; !\"\".equals(producer)'>"
             + "and producer like CONCAT('%',#{producer},'%') "
@@ -326,7 +326,7 @@ public interface GisOrthoProductInfoMapper {
             +"</if>"
             +"and product_id IN ("
             + "SELECT product_id \n" +
-            "            FROM pdm_product_info \n" +
+            "            FROM gis_product_info \n" +
             "            WHERE 1=1 \n" +
             "<if test='null!= deliver_name &amp; !\"\".equals(deliver_name)'>"
             + "and deliver_name = #{deliver_name}"
@@ -356,7 +356,7 @@ public interface GisOrthoProductInfoMapper {
             +"UNION"
             +"</if>"
             +" SELECT product_id,st_asgeojson(image_geo) as geo, subdivision_product_name as ortho_product_name,gmt_created\n" +
-            "            FROM pdm_subdivision_product_info  \n"+
+            "            FROM gis_subdivision_product_info  \n"+
             "            WHERE 1=1 \n"+
             "<if test='null!= producer &amp; !\"\".equals(producer)'>"
             + "and producer like CONCAT('%',#{producer},'%') "
@@ -369,7 +369,7 @@ public interface GisOrthoProductInfoMapper {
             +"</if>"
             +"and product_id IN ("
             + "SELECT product_id \n" +
-            "            FROM pdm_product_info \n" +
+            "            FROM gis_product_info \n" +
             "            WHERE 1=1 \n" +
             "<if test='null!= deliver_name &amp; !\"\".equals(deliver_name)'>"
             + "and deliver_name = #{deliver_name}"

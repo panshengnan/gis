@@ -1,12 +1,10 @@
 package com.cgwx.data.dto;
 
 public class ProductQueryList {
+
     private String productName;
-
     private String productType;
-
     private String productDescription;
-
     private String productId;
     private String industry;
 

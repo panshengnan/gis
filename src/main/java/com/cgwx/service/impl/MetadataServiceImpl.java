@@ -101,22 +101,22 @@ public class MetadataServiceImpl implements IMetadataService {
         String path =themeticProductDetailPart1.getParentDirectory();
 
         //获取文件列表和对应的URL
-        List<FileUrl> themeticUrlList = getFileListAndUrl(productId,singlePeriodProductId);
-        singlePeriodThemeticProductDetail.setLayerName(pdmProductLayerInfoMapper.getThemeticProductLayerName(productId,singlePeriodProductId));
-        for(int a=themeticUrlList.size()-1;a>=0;a--) {
-            if(themeticUrlList.get(a).getFileName().contains("jpg"))
-            {
-                //System.out.println("removejpg"+themeticUrlList.get(a).getFileName());
-                singlePeriodThemeticProductDetail.setThumbnailUrl(productStoreLinkHead+themeticUrlList.get(a).getFileUrl());
-                //themeticUrlList.remove(a);
-            }
-            else
-            {
-                themeticUrlList.get(a).setFileUrl(productStoreLinkHead+themeticUrlList.get(a).getFileUrl());
-            }
-
-        }
-        singlePeriodThemeticProductDetail.setFileListAndUrl(themeticUrlList);
+//        List<FileUrl> themeticUrlList = getFileListAndUrl(productId,singlePeriodProductId);
+//        singlePeriodThemeticProductDetail.setLayerName(pdmProductLayerInfoMapper.getThemeticProductLayerName(productId,singlePeriodProductId));
+//        for(int a=themeticUrlList.size()-1;a>=0;a--) {
+//            if(themeticUrlList.get(a).getFileName().contains("jpg"))
+//            {
+//                //System.out.println("removejpg"+themeticUrlList.get(a).getFileName());
+//                singlePeriodThemeticProductDetail.setThumbnailUrl(productStoreLinkHead+themeticUrlList.get(a).getFileUrl());
+//                //themeticUrlList.remove(a);
+//            }
+//            else
+//            {
+//                themeticUrlList.get(a).setFileUrl(productStoreLinkHead+themeticUrlList.get(a).getFileUrl());
+//            }
+//
+//        }
+//        singlePeriodThemeticProductDetail.setFileListAndUrl(themeticUrlList);
 
         return singlePeriodThemeticProductDetail;
     }
@@ -180,10 +180,11 @@ public class MetadataServiceImpl implements IMetadataService {
         List<SinglePeriodThemeticProductDetail> list =new ArrayList<>();
         for (int count = 0; count <size; count++){
            list.add(getSinglePeriodThemeticProductDetail(productId,singlePeriodProductIdList.get(count)));
+           list.get(count).setLegendUrl(pdmProductLayerInfoMapper.getLayerLegend(productId,singlePeriodProductIdList.get(count)));
         }
         themeticProductDetail.setSinglePeriodThemeticProductDetail(list);
-        return themeticProductDetail;
 
+        return themeticProductDetail;
     }
 
     @Override

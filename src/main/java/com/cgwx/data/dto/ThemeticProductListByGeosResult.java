@@ -7,6 +7,15 @@ public class ThemeticProductListByGeosResult {
     private int totalPageNum;
     private List<ThemeticProductListByGeos> productQueryList;
 
+    private List<ThemeticProductDetail> ThemeticProductDetailList;
+
+    public List<ThemeticProductDetail> getThemeticProductDetailList() {
+        return ThemeticProductDetailList;
+    }
+
+    public void setThemeticProductDetailList(List<ThemeticProductDetail> themeticProductDetailList) {
+        ThemeticProductDetailList = themeticProductDetailList;
+    }
     public long getTotalItems() {
         return totalItems;
     }

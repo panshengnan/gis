@@ -24,7 +24,16 @@ public class SinglePeriodThemeticProductDetail {
 
     private String thumbnailUrl;
 
-    private List<FileUrl> fileListAndUrl;
+    private String legendUrl;
+
+    public String getLegendUrl() {
+        return legendUrl;
+    }
+
+    public void setLegendUrl(String legendUrl) {
+        this.legendUrl = legendUrl;
+    }
+//    private List<FileUrl> fileListAndUrl;
 
     private String singlePeriodProductName;
 
@@ -95,10 +104,10 @@ public class SinglePeriodThemeticProductDetail {
         this.thumbnailUrl =thumbnailUrl == null ? null : thumbnailUrl.trim();
     }
 
-    public List<FileUrl> getFileListAndUrl(){return  fileListAndUrl;}
-    public void setFileListAndUrl(List<FileUrl> fileListAndUrl){
-        this.fileListAndUrl =fileListAndUrl;
-    }
+//    public List<FileUrl> getFileListAndUrl(){return  fileListAndUrl;}
+//    public void setFileListAndUrl(List<FileUrl> fileListAndUrl){
+//        this.fileListAndUrl =fileListAndUrl;
+//    }
 
     public String getCenterimagingTime() {
         return centerImagingTime;

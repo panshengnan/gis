@@ -11,7 +11,7 @@ public interface GisThemeticProductDetailInfoMapper {
 
     List<GisThemeticProductDetailInfo> selectAll();
     @Select({"SELECT single_period_product_id\n" +
-            " FROM pdm_themetic_product_detail_info\n" +
+            " FROM gis_themetic_product_detail_info\n" +
             "WHERE product_id = #{productId}"
     })
     String selectSinglePeriodProductIdByProductId(@Param("productId") String productId);
@@ -23,7 +23,7 @@ public interface GisThemeticProductDetailInfoMapper {
 //            "               cloud_percent, center_imaging_time, size_of_tif, client_name, deliever_name, \n" +
 //            "                deliever_time, nation, province, city, county,single_period_product_name, \n" +
 //            "             village, geographic_info, gmt_created,gmt_modified\n" +
-//            "            FROM pdm_themetic_product_detail_info\n" +
+//            "            FROM gis_themetic_product_detail_info\n" +
 //            "            WHERE single_period_product_id = #{singlePeriodProductId}"
 //    })
 //    @Results({@Result(
@@ -97,7 +97,7 @@ public interface GisThemeticProductDetailInfoMapper {
 //    )
 //    })
 //        //查询请求详细信息调用的数据库语句
-//    PdmThemeticProductDetailInfo selectThemeticProductDetailByProductIdPart2(@Param("singlePeriodProductId") String singlePeriodProductId);
+//    gisThemeticProductDetailInfo selectThemeticProductDetailByProductIdPart2(@Param("singlePeriodProductId") String singlePeriodProductId);
 
 
     @Select({"SELECT product_id, single_period_product_id, single_period_product_directory, producer, \n" +
@@ -105,7 +105,7 @@ public interface GisThemeticProductDetailInfoMapper {
             "               imaging_time, size_of_tif,  \n" +
             "                single_period_product_name,produce_time, \n" +
             "               gmt_created,gmt_modified\n" +
-            "            FROM pdm_themetic_product_detail_info\n" +
+            "            FROM gis_themetic_product_detail_info\n" +
             "            WHERE single_period_product_id = #{singlePeriodProductId}and product_id= #{productId}"
     })
     @Results({@Result(
@@ -152,7 +152,7 @@ public interface GisThemeticProductDetailInfoMapper {
 
 
     @Select({"SELECT COUNT(single_period_product_id)\n" +
-            "FROM pdm_themetic_product_detail_info\n" +
+            "FROM gis_themetic_product_detail_info\n" +
             "WHERE product_id = #{productId}"
     })
 
@@ -161,7 +161,7 @@ public interface GisThemeticProductDetailInfoMapper {
     Integer countSinglePeriodThemeticProductId(@Param("productId") String productId);
 
     @Select({"SELECT single_period_product_id\n" +
-            "FROM pdm_themetic_product_detail_info\n" +
+            "FROM gis_themetic_product_detail_info\n" +
             "WHERE product_id = #{productId} order by single_period_product_name collate \"C\""
     })
 
@@ -171,7 +171,7 @@ public interface GisThemeticProductDetailInfoMapper {
 
     @Select("<script>"
             +"SELECT product_id,st_asgeojson(image_geo) as geo,single_period_product_id\n" +
-            "            FROM pdm_themetic_product_detail_info\n"+
+            "            FROM gis_themetic_product_detail_info\n"+
             "            WHERE 1=1 \n"+
             "<if test='null!= producer &amp; !\"\".equals(producer)'>"
             + "and producer like CONCAT('%',#{producer},'%') "
@@ -194,7 +194,7 @@ public interface GisThemeticProductDetailInfoMapper {
     List<ThemeticProductSimpleInfo> selectSimpleinfoByProducerandGeo(@Param("producer")String producer,
                                                                      @Param("image_geo")Object image_geo);
     @Select({"SELECT product_id,st_asgeojson(image_geo) as geo,single_period_product_id\n" +
-            "            FROM pdm_themetic_product_detail_info\n"
+            "            FROM gis_themetic_product_detail_info\n"
     })
     @Results({@Result(
             column = "geo",
@@ -210,7 +210,7 @@ public interface GisThemeticProductDetailInfoMapper {
     List<ThemeticProductSimpleInfo> selectSimpleinfotest();
 
 
-    @Select({"update pdm_themetic_product_detail_info\n" +
+    @Select({"update gis_themetic_product_detail_info\n" +
             "  set image_geo = st_geomfromgeojson(#{geoJson})\n"
             +" where product_id = #{productId} and single_period_product_id = #{singleId} "
     })
@@ -218,7 +218,7 @@ public interface GisThemeticProductDetailInfoMapper {
 
 
     @Select({"SELECT product_id,st_asgeojson(image_geo) as geo,single_period_product_id\n" +
-            "            FROM pdm_themetic_product_detail_info\n"+
+            "            FROM gis_themetic_product_detail_info\n"+
             "            WHERE product_id=#{productId}"
     })
     @Results({@Result(

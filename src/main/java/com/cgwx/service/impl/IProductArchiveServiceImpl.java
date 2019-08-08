@@ -7,6 +7,7 @@ import com.cgwx.data.dto.UploadFileReturn;
 import com.cgwx.data.entity.*;
 import com.cgwx.service.IProductArchiveService;
 import com.cgwx.service.IProductDownloadService;
+import com.cgwx.service.IlayerPublishService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sun.media.jai.codec.ImageCodec;
@@ -58,8 +59,8 @@ public class IProductArchiveServiceImpl implements IProductArchiveService {
     @Autowired
     IProductDownloadService iProductDownloadService;
 
-//    @Autowired
-//    LayerPublishService layerPublishService;//ss0726
+    @Autowired
+    IlayerPublishService ilayerPublishService;//ss0726
 
     @Autowired
     GisThemeticProductInfoMapper pdmThemeticProductInfoMapper;
@@ -947,19 +948,19 @@ public class IProductArchiveServiceImpl implements IProductArchiveService {
     @Override
     public List<String> getShpFileList(String path){
         List<String> fileList = new ArrayList<>();
-//        String fileName = layerPublishService.getShpPathWithoutCutline(path);//ss0726
-//        fileList.add(fileName);
-//        System.out.println(fileName);
-//        fileName = fileName.substring(0,fileName.indexOf('.')-1);
-//        File file = new File(path);
-//        File[] tempList = file.listFiles();
-//        for (int i = 0; i < tempList.length; i++) {
-//            if (tempList[i].isFile()) {
-//                String tmp = tempList[i].toString();
-//                if (tmp.contains(fileName))
-//                   fileList.add(tmp);
-//            }
-//        }
+        String fileName = ilayerPublishService.getShpPathWithoutCutline(path);//ss0726
+        fileList.add(fileName);
+        System.out.println(fileName);
+        fileName = fileName.substring(0,fileName.indexOf('.')-1);
+        File file = new File(path);
+        File[] tempList = file.listFiles();
+        for (int i = 0; i < tempList.length; i++) {
+            if (tempList[i].isFile()) {
+                String tmp = tempList[i].toString();
+                if (tmp.contains(fileName))
+                   fileList.add(tmp);
+            }
+        }
         return  fileList;
     }
 

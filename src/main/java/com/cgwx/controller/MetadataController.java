@@ -8,7 +8,7 @@ import com.cgwx.data.dto.*;
 import com.cgwx.service.IMetadataService;
 import com.cgwx.service.impl.IProductArchiveServiceImpl;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+//import com.github.pagehelper.PageInfo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -354,106 +354,156 @@ public class MetadataController
 }
 
 
+//旧版接口 ss0801
+//    @RequestMapping(value = "/ThemeticProductListByGeos")  //产品列表
+//    @CrossOrigin(methods = RequestMethod.GET)
+//    @ResponseBody
+//    public Result getThemeticProductListByGeos(@RequestParam(value = "json", required = true) String json ,
+//                                               @RequestParam(value = "curPageNum", required = true) int curPageNum,
+//                                               @RequestParam(value = "maxResultNum", required = true) int maxResultNum)
+//    {
+//        System.out.println(json);
+//        String clientname=new String();
+//        String productDescription=new String();
+//        String producer=new String();
+//        Object imageGeo=new Object();
+//        JSONObject jsonObject = JSONObject.fromObject(json);
+//        if(jsonObject.getString("client_name").equals(""))
+//        {
+//            clientname=null;
+//        }
+//        else
+//        {
+//            clientname=jsonObject.getString("client_name");
+//        }
+//        if(jsonObject.getString("product_description").equals(""))
+//        {
+//            productDescription=null;
+//        }
+//        else
+//        {
+//            productDescription=jsonObject.getString("product_description");
+//        }
+//        if(jsonObject.getString("producer").equals(""))
+//        {
+//            producer=null;
+//        }
+//        else
+//        {
+//            producer=jsonObject.getString("producer");
+//        }
+//        List<Industry> queryIndustryList =new ArrayList<Industry>();
+//        //System.out.println(jsonObject.getString("industry"));
+//        if(jsonObject.getString("industry").equals("[]"))
+//        {
+//
+//            queryIndustryList =null;
+//        }
+//        else
+//        {
+//            JSONArray jsonArray=jsonObject.getJSONArray("industry");
+//
+//            for(int i=0;i<jsonArray.size();i++)
+//            {
+//                Industry industrytemp=new Industry();
+//                industrytemp.setLevel1(jsonArray.getJSONObject(i).getInt("level1"));
+//                if(jsonArray.getJSONObject(i).getString("level2")=="null")
+//                {
+//                    industrytemp.setLevel2(10000);
+//                }
+//                else
+//                {
+//                    industrytemp.setLevel2(jsonArray.getJSONObject(i).getInt("level2"));
+//                }
+//                queryIndustryList.add(industrytemp);
+//            }
+//        }
+//        if(jsonObject.getString("image_geo").equals(""))
+//        {
+//            imageGeo=null;
+//        }
+//        else
+//        {
+//            imageGeo=jsonObject.getString("image_geo");
+//        }
+//        List<ThemeticProductListByGeos> themeticProductListByGeosResultList=new ArrayList<ThemeticProductListByGeos>();
+//        //System.out.println("final");
+//        //metadataService.printThemeticSimpleInfoList(themeticProductSimpleInfoList1);
+//        PageHelper.startPage(curPageNum,maxResultNum);
+//        themeticProductListByGeosResultList=metadataService.getThemeticProductListByConditions(clientname,productDescription,imageGeo,producer,queryIndustryList);
+//        if(themeticProductListByGeosResultList!=null)
+//        {
+//            for(int i=0;i<themeticProductListByGeosResultList.size();i++)
+//            {
+//                themeticProductListByGeosResultList.get(i).setUrl(productStoreLinkHead+pdmProductStoreLinkInfoMapper.selectProductAllfileDownloadurl(themeticProductListByGeosResultList.get(i).getProductId()));
+//                themeticProductListByGeosResultList.get(i).setThemeticProductSimpleInfoList(pdmThemeticProductDetailInfoMapper.selectSimpleinfoById(themeticProductListByGeosResultList.get(i).getProductId()));
+//                themeticProductListByGeosResultList.get(i).setIndustryList(pdmThemeticProductDetailIndustryInfoMapper.selectIndustryByProductid(themeticProductListByGeosResultList.get(i).getProductId()));
+//            }
+//        }
+//        else {
+//            return ResultUtil.success(null);
+//        }
+//        PageInfo<ThemeticProductListByGeos> pageInfo = new PageInfo<>(themeticProductListByGeosResultList);
+//        System.out.println("z总条目数：" + pageInfo.getTotal());
+//        System.out.println("z总页数：" + pageInfo.getPages());
+//        ThemeticProductListByGeosResult themeticProductListByGeosResult = new ThemeticProductListByGeosResult();
+//        themeticProductListByGeosResult.setTotalItems(pageInfo.getTotal());
+//        themeticProductListByGeosResult.setTotalPageNum(pageInfo.getPages());
+//        themeticProductListByGeosResult.setProductQueryList(themeticProductListByGeosResultList);
+//        return ResultUtil.success(themeticProductListByGeosResult);
+//    }
+//旧版接口 ss0801
 
-    @RequestMapping(value = "/ThemeticProductListByGeos")  //产品列表
-    @CrossOrigin(methods = RequestMethod.GET)
+    @RequestMapping(value = "/getThemeticProductListAndDeatailByIndustry")  //专题产品列表 简化按行业进行查询
+    @CrossOrigin()
     @ResponseBody
-    public Result getThemeticProductListByGeos(@RequestParam(value = "json", required = true) String json ,
-                                               @RequestParam(value = "curPageNum", required = true) int curPageNum,
-                                               @RequestParam(value = "maxResultNum", required = true) int maxResultNum)
+    public Result getThemeticProductListByGeos(@RequestParam(value = "client_name", required = true) String clientname,
+                                               @RequestParam(value = "industry", required = true) int industry)
     {
-        System.out.println(json);
-        String clientname=new String();
-        String productDescription=new String();
-        String producer=new String();
-        Object imageGeo=new Object();
-        JSONObject jsonObject = JSONObject.fromObject(json);
-        if(jsonObject.getString("client_name").equals(""))
+        String productDescription=null;
+        String producer=null;
+        Object imageGeo=null;
+        if(clientname=="")
         {
             clientname=null;
         }
-        else
-        {
-            clientname=jsonObject.getString("client_name");
-        }
-        if(jsonObject.getString("product_description").equals(""))
-        {
-            productDescription=null;
-        }
-        else
-        {
-            productDescription=jsonObject.getString("product_description");
-        }
-        if(jsonObject.getString("producer").equals(""))
-        {
-            producer=null;
-        }
-        else
-        {
-            producer=jsonObject.getString("producer");
-        }
         List<Industry> queryIndustryList =new ArrayList<Industry>();
         //System.out.println(jsonObject.getString("industry"));
-        if(jsonObject.getString("industry").equals("[]"))
+        if(industry ==0)
         {
 
             queryIndustryList =null;
         }
         else
         {
-            JSONArray jsonArray=jsonObject.getJSONArray("industry");
-
-            for(int i=0;i<jsonArray.size();i++)
-            {
-                Industry industrytemp=new Industry();
-                industrytemp.setLevel1(jsonArray.getJSONObject(i).getInt("level1"));
-                if(jsonArray.getJSONObject(i).getString("level2")=="null")
-                {
-                    industrytemp.setLevel2(10000);
-                }
-                else
-                {
-                    industrytemp.setLevel2(jsonArray.getJSONObject(i).getInt("level2"));
-                }
-                queryIndustryList.add(industrytemp);
-            }
-        }
-        if(jsonObject.getString("image_geo").equals(""))
-        {
-            imageGeo=null;
-        }
-        else
-        {
-            imageGeo=jsonObject.getString("image_geo");
+            Industry industrytemp=new Industry();
+            industrytemp.setLevel1(industry);
+            industrytemp.setLevel2(10000);
+            queryIndustryList.add(industrytemp);
         }
         List<ThemeticProductListByGeos> themeticProductListByGeosResultList=new ArrayList<ThemeticProductListByGeos>();
         //System.out.println("final");
         //metadataService.printThemeticSimpleInfoList(themeticProductSimpleInfoList1);
-        PageHelper.startPage(curPageNum,maxResultNum);
+        //  PageHelper.startPage(curPageNum,maxResultNum);//目前无分页
         themeticProductListByGeosResultList=metadataService.getThemeticProductListByConditions(clientname,productDescription,imageGeo,producer,queryIndustryList);
+
+//        List<ThemeticProductDetail> ThemeticProductDetailListTep = new ArrayList<>();
+
+        List<ThemeticProductDetail>  themeticProductQueryByIndustryList = new ArrayList<>();
         if(themeticProductListByGeosResultList!=null)
         {
             for(int i=0;i<themeticProductListByGeosResultList.size();i++)
             {
-                themeticProductListByGeosResultList.get(i).setUrl(productStoreLinkHead+pdmProductStoreLinkInfoMapper.selectProductAllfileDownloadurl(themeticProductListByGeosResultList.get(i).getProductId()));
-                themeticProductListByGeosResultList.get(i).setThemeticProductSimpleInfoList(pdmThemeticProductDetailInfoMapper.selectSimpleinfoById(themeticProductListByGeosResultList.get(i).getProductId()));
-                themeticProductListByGeosResultList.get(i).setIndustryList(pdmThemeticProductDetailIndustryInfoMapper.selectIndustryByProductid(themeticProductListByGeosResultList.get(i).getProductId()));
+                List<String> singlePeriodProductIdList=pdmThemeticProductDetailInfoMapper.selecSinglePeriodThemeticProductList(themeticProductListByGeosResultList.get(i).getProductId());//ss0805
+                ThemeticProductDetail multiPeriodThemeticProductDetail = metadataService.getThemeticProductDetail(themeticProductListByGeosResultList.get(i).getProductId(),singlePeriodProductIdList);
+                themeticProductQueryByIndustryList.add(multiPeriodThemeticProductDetail);
             }
         }
         else {
             return ResultUtil.success(null);
         }
-        PageInfo<ThemeticProductListByGeos> pageInfo = new PageInfo<>(themeticProductListByGeosResultList);
-        System.out.println("z总条目数：" + pageInfo.getTotal());
-        System.out.println("z总页数：" + pageInfo.getPages());
-        ThemeticProductListByGeosResult themeticProductListByGeosResult = new ThemeticProductListByGeosResult();
-        themeticProductListByGeosResult.setTotalItems(pageInfo.getTotal());
-        themeticProductListByGeosResult.setTotalPageNum(pageInfo.getPages());
-        themeticProductListByGeosResult.setProductQueryList(themeticProductListByGeosResultList);
-        return ResultUtil.success(themeticProductListByGeosResult);
+        return ResultUtil.success(themeticProductQueryByIndustryList);
     }
-
-
 
     @RequestMapping(value = "/AdvanceProductListByGeos")  //产品列表
     @CrossOrigin(methods = RequestMethod.GET)

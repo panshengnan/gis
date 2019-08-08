@@ -12,7 +12,7 @@ public interface GisThemeticProductDetailIndustryInfoMapper {
     List<GisThemeticProductDetailIndustryInfo> selectAll();
     @Select("<script>"
             +"SELECT product_id\n" +
-            "            FROM pdm_themetic_product_detail_industry_info\n"+
+            "            FROM gis_themetic_product_detail_industry_info\n"+
             "            WHERE 1=1 \n"+
             "<if test='level1!=10000'>"
             + "and industry_level1=#{level1}"
@@ -27,7 +27,7 @@ public interface GisThemeticProductDetailIndustryInfoMapper {
 
 
     @Select(            "SELECT industry_level1,industry_level2\n" +
-            "            FROM pdm_themetic_product_detail_industry_info\n"+
+            "            FROM gis_themetic_product_detail_industry_info\n"+
             "            WHERE product_id=#{productId} \n"            )
     @Results({@Result(
             column = "industry_level1",
@@ -42,7 +42,7 @@ public interface GisThemeticProductDetailIndustryInfoMapper {
 
 
     @Select({"SELECT product_id\n" +
-            "            FROM pdm_themetic_product_detail_industry_info\n"+
+            "            FROM gis_themetic_product_detail_industry_info\n"+
             "            WHERE ${where}"})
 
     List<String> selectThemeticidByIndustrylist(@Param("where")String where);

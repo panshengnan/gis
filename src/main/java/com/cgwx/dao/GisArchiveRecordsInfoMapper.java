@@ -11,7 +11,7 @@ public interface GisArchiveRecordsInfoMapper {
     List<GisArchiveRecordsInfo> selectAll();
     @Select({"<script>"+
             "select *\n" +
-            "from pdm_archive_records_info\n" +
+            "from gis_archive_records_info\n" +
             "where archive_personnel =  #{archivePersonnel} "
 
             +"<if test=' (archiveType == -1)  &amp; (archiveStatus == -1) &amp; null!= productName &amp; !\"\".equals(productName)'>"
@@ -56,7 +56,7 @@ public interface GisArchiveRecordsInfoMapper {
                                                                        @Param("archiveType") int archiveType,
                                                                        @Param("archiveStatus")int archiveStatus);
 
-    @Select({" update pdm_archive_records_info\n" +
+    @Select({" update gis_archive_records_info\n" +
             "set archive_result = #{result} , product_id = #{productId} , archive_type = #{productType} \n" +
             "where product_id = #{tempId} "})
     void updateArchiveRecordsInfo(@Param("productId") String productId,@Param("result") int result,@Param("tempId") String tempId,@Param("productType") int productType);

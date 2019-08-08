@@ -14,17 +14,17 @@ public interface GisSubdivisionProductInfoMapper {
     int insert(GisSubdivisionProductInfo record);
 
     List<GisSubdivisionProductInfo> selectAll();
-    @Select({"SELECT count(DISTINCT subdivision.product_id) as count\n                \n            FROM pdm_subdivision_product_info subdivision  \n            WHERE subdivision.gmt_created >=  '${currentDate}'"})
+    @Select({"SELECT count(DISTINCT subdivision.product_id) as count\n                \n            FROM gis_subdivision_product_info subdivision  \n            WHERE subdivision.gmt_created >=  '${currentDate}'"})
     int selectSubdivisionProductCountByDate(@Param("currentDate") String var1);
 
-    @Select({"SELECT subdivision_product_directory\nFROM pdm_subdivision_product_info \nWHERE  product_id = #{productId}"})
+    @Select({"SELECT subdivision_product_directory\nFROM gis_subdivision_product_info \nWHERE  product_id = #{productId}"})
     String selectFilePathByProductId(@Param("productId") String var1);
     @Select({"SELECT product_id, subdivision_product_name, producer, \n" +
             "               st_asgeojson(image_geo) as geo, resolution, \n" +
             "               number_of_tif,industry,subdivision_product_directory,  \n" +
             "                geographic_info,client_name,deliever_name,deliever_time, \n" +
             "               gmt_created,gmt_modified\n" +
-            "            FROM pdm_subdivision_product_info\n" +
+            "            FROM gis_subdivision_product_info\n" +
             "            WHERE product_id = #{productId}"
     })
     @Results({@Result(
@@ -74,7 +74,7 @@ public interface GisSubdivisionProductInfoMapper {
             "               st_asgeojson(image_geo) as geo, resolution, \n" +
             "               number_of_tif,industry,subdivision_product_directory,  \n" +
             "                geographic_info,client_name,deliever_name,deliever_time \n" +
-            "FROM pdm_subdivision_product_info\n" +
+            "FROM gis_subdivision_product_info\n" +
             "WHERE  1=1  \n" +
             "<if test='null!= productName &amp; !\"\".equals(productName)'>"
             + "and subdivision_product_name like CONCAT('%',#{productName},'%') "
@@ -144,7 +144,7 @@ public interface GisSubdivisionProductInfoMapper {
                                                                       @Param("resolution") BigDecimal resolution, @Param("industry") String industry);
 
     @Select({"SELECT product_id,st_asgeojson(image_geo) as geo\n" +
-            "            FROM pdm_subdivision_product_info\n"
+            "            FROM gis_subdivision_product_info\n"
     })
     @Results({@Result(
             column = "geo",
@@ -160,7 +160,7 @@ public interface GisSubdivisionProductInfoMapper {
 
     @Select("<script>"
             +"SELECT product_id,st_asgeojson(image_geo) as geo, subdivision_product_name\n" +
-            "            FROM pdm_subdivision_product_info  \n"+
+            "            FROM gis_subdivision_product_info  \n"+
             "            WHERE 1=1 \n"+
             "<if test='null!= producer &amp; !\"\".equals(producer)'>"
             + "and producer like CONCAT('%',#{producer},'%') "
@@ -173,7 +173,7 @@ public interface GisSubdivisionProductInfoMapper {
             +"</if>"
             +"and product_id IN ("
             + "SELECT product_id \n" +
-            "            FROM pdm_product_info \n" +
+            "            FROM gis_product_info \n" +
             "            WHERE 1=1 \n" +
             "<if test='null!= deliver_name &amp; !\"\".equals(deliver_name)'>"
             + "and deliver_name = #{deliver_name}"

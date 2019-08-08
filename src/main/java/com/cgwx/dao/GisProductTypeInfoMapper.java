@@ -12,13 +12,13 @@ public interface GisProductTypeInfoMapper {
 
     List<GisProductTypeInfo> selectAll();
     @Select({"SELECT product_description\n" +
-            " FROM pdm_product_type_info\n" +
+            " FROM gis_product_type_info\n" +
             "WHERE product_type = #{productType}"
     })
     String selectProductTypeDescriptionByProductType(@Param("productType") int productType);
 
     @Select({"SELECT product_type\n" +
-            " FROM pdm_product_type_info\n" +
+            " FROM gis_product_type_info\n" +
             "WHERE product_description like #{%productTypeDescription%}"
     })
     int selectProductTypeByProductTypeDescription(@Param("productTypeDescription") String productTypeDescription);

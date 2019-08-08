@@ -43,6 +43,7 @@ public class ThemeticProductDetail {
     private String docAnalysisReportUrl;
     private String allFileDownloadUrl;
 
+
     public void setAnalysisReportUrl(String analysisReportUrl) {
         this.analysisReportUrl = analysisReportUrl;
     }

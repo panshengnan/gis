@@ -7,6 +7,12 @@ public class GisProductLayerInfo {
 
     private String layerName;
 
+    private String sldPath;
+
+    private String styleName;
+
+    private String legend;
+
     public String getProductId() {
         return productId;
     }
@@ -29,5 +35,29 @@ public class GisProductLayerInfo {
 
     public void setLayerName(String layerName) {
         this.layerName = layerName == null ? null : layerName.trim();
+    }
+
+    public String getSldPath() {
+        return sldPath;
+    }
+
+    public void setSldPath(String sldPath) {
+        this.sldPath = sldPath == null ? null : sldPath.trim();
+    }
+
+    public String getStyleName() {
+        return styleName;
+    }
+
+    public void setStyleName(String styleName) {
+        this.styleName = styleName == null ? null : styleName.trim();
+    }
+
+    public String getLegend() {
+        return legend;
+    }
+
+    public void setLegend(String legend) {
+        this.legend = legend == null ? null : legend.trim();
     }
 }

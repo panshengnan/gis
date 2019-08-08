@@ -11,7 +11,7 @@ public interface GisSatelliteInfoMapper {
 
     List<GisSatelliteInfo> selectAll();
     @Select("SELECT satellite_description\n" +
-            "FROM pdm_satellite_info\n" +
+            "FROM gis_satellite_info\n" +
             "WHERE 1=1 order by gmt_created asc "
     )
     List<String> selectSatelliteInfo();

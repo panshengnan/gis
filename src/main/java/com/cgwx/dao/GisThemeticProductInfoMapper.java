@@ -10,15 +10,15 @@ public interface GisThemeticProductInfoMapper {
     int insert(GisThemeticProductInfo record);
 
     List<GisThemeticProductInfo> selectAll();
-    @Select({"SELECT count(DISTINCT theme.product_id) as count\n                \n            FROM pdm_themetic_product_info theme  \n            WHERE theme.gmt_created >=  '${currentDate}'"})
+    @Select({"SELECT count(DISTINCT theme.product_id) as count\n                \n            FROM gis_themetic_product_info theme  \n            WHERE theme.gmt_created >=  '${currentDate}'"})
     int selectThemeticProductCountByDate(@Param("currentDate") String var1);
 
-    @Select({"SELECT parent_directory\nFROM pdm_themetic_product_info \nWHERE  product_id = #{productId}"})
+    @Select({"SELECT parent_directory\nFROM gis_themetic_product_info \nWHERE  product_id = #{productId}"})
     String selectFilePathByProductId(@Param("productId") String var1);
 
     @Select({"SELECT product_id, themetic_product_name,  parent_directory, is_multi_period, \n" +
             "          client_name, deliever_name,deliever_time,gmt_created,gmt_modified\n" +
-            "            FROM pdm_themetic_product_info\n" +
+            "            FROM gis_themetic_product_info\n" +
             "            WHERE product_id = #{productId}"
     })
     @Results({@Result(
@@ -48,7 +48,7 @@ public interface GisThemeticProductInfoMapper {
    GisThemeticProductInfo selectThemeticProductDetailPart1ByProductId(@Param("productId") String productId);
 
     @Select({"SELECT industry\n" +
-            "            FROM pdm_themetic_product_info\n" +
+            "            FROM gis_themetic_product_info\n" +
             "            WHERE product_id = #{productId}"
     })
 
@@ -62,7 +62,7 @@ public interface GisThemeticProductInfoMapper {
             +"SELECT  r.product_id, r.themetic_product_name, r.industry,  r.client_name,r.deliever_name,\n" +
             "st_asgeojson(i.image_geo) as geo,i.producer,i.satellite,i.sensor,i.size_of_tif,i.imaging_time,\n" +
             "i.produce_time,i.single_period_product_id,i.single_period_product_name\n" +
-            "FROM pdm_themetic_product_info  r , pdm_themetic_product_detail_info i \n" +
+            "FROM gis_themetic_product_info  r , gis_themetic_product_detail_info i \n" +
             "WHERE  1=1 and r.product_id =i.product_id \n" +
             "<if test='null!= productName &amp; !\"\".equals(productName)'>"
             + "and r.themetic_product_name like CONCAT('%',#{productName},'%') "

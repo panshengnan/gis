@@ -7,6 +7,7 @@ public class ThemeticProductListByGeos {
     String productId;
     String productName;
     String url;
+    List<Industry> industryList;
 
     public void setUrl(String url) {
         this.url = url;
@@ -23,8 +24,6 @@ public class ThemeticProductListByGeos {
     public void setProductName(String productName) {
         this.productName = productName;
     }
-
-    List<Industry> industryList;
 
     public void setThemeticProductSimpleInfoList(List<ThemeticProductSimpleInfo> themeticProductSimpleInfoList) {
         this.themeticProductSimpleInfoList = themeticProductSimpleInfoList;

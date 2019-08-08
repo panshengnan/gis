@@ -7,7 +7,7 @@ import com.cgwx.data.dto.UploadFileReturn;
 import com.cgwx.data.entity.*;
 import com.cgwx.service.IProductArchiveService;
 import com.cgwx.service.IProductDownloadService;
-import com.cgwx.service.LayerPublishService;
+import com.cgwx.service.IlayerPublishService;
 import com.github.pagehelper.PageInfo;
 import it.geosolutions.geoserver.rest.GeoServerRESTPublisher;
 import it.geosolutions.geoserver.rest.GeoServerRESTReader;
@@ -42,8 +42,8 @@ public class ProductArchiveController {
     @Autowired
     IProductDownloadService iProductDownloadService;
 
-//    @Autowired
-//    LayerPublishService layerPublishService;//ss0726
+    @Autowired
+    IlayerPublishService ilayerPublishService;//ss0726
 
     @Autowired
     private AmqpTemplate amqpTemplate;
@@ -417,7 +417,7 @@ public class ProductArchiveController {
                 //开始发布tif
                 JSONObject content = new JSONObject();
                 System.out.println("tif文件夹路径：" + officialPath + '\\' + jsonObjectTmp.getString("singleName"));
-//                String tifPath = layerPublishService.getTifFilePath(singlePath);//ss0726
+//                String tifPath = ilayerPublishService.getTifFilePath(singlePath);//ss0801
 //                content.put("path", tifPath);//注意以后改了
 //                System.out.println("tif路径是：" + content.getString("path"));
 //                //////////////////////////
@@ -454,7 +454,7 @@ public class ProductArchiveController {
 //
                         workspaces = reader.getWorkspaceNames();
                         if (workspaces.contains("tifPublishTest")) {
-                            if (publisher.publishShp("tifPublishTest", layerName, layerName, zipFileSource, layerPublishService.getShpEPSG(layerPublishService.getShpPathWithoutCutline(singlePath)))) {//ss0726
+                            if (publisher.publishShp("tifPublishTest", layerName, layerName, zipFileSource, ilayerPublishService.getShpEPSG(ilayerPublishService.getShpPathWithoutCutline(singlePath)))) {//ss0726
                                 result = "发布成功！";
                             } else {
                                 result = "发布失败！";
@@ -465,19 +465,19 @@ public class ProductArchiveController {
                         mue.printStackTrace();
                     }
                     zipFileSource.delete();
-                    String shpPath = layerPublishService.getShpPathWithoutCutline(singlePath);
+                    String shpPath = ilayerPublishService.getShpPathWithoutCutline(singlePath);
                     System.out.println("shp的路径是：" + shpPath);
-                    String geoJson = layerPublishService.getShpLatLonBounding(shpPath);
-                    System.out.println("geoJson是：" + geoJson);
+//                    String geoJson = ilayerPublishService.getShpLatLonBounding(shpPath);//ss0731
+//                    System.out.println("geoJson是：" + geoJson);
                     iProductArchiveService.rename(singlePath, jsonObjectTmp.getString("singleName"));
-                    layerPublishService.updateThemeticProductDetailImgGeo(productId, jsonObjectTmp.getString("singleTempId"), geoJson);
+//                    ilayerPublishService.updateThemeticProductDetailImgGeo(productId, jsonObjectTmp.getString("singleTempId"), geoJson);//ss0731
                     //////
                     GisProductLayerInfo pdmProductLayerInfo = new GisProductLayerInfo();
                     pdmProductLayerInfo.setProductId(productId);
                     pdmProductLayerInfo.setSingleId(jsonObjectTmp.getString("singleTempId"));
                     pdmProductLayerInfo.setLayerName("tifPublishTest:" + layerName);
                     System.out.println("更新图层中");
-                    layerPublishService.updateProductLayerInfo(pdmProductLayerInfo);
+//                    ilayerPublishService.updateProductLayerInfo(pdmProductLayerInfo);//ss0731
                     System.out.println("更新图层完毕！图层名字：" + pdmProductLayerInfo.getLayerName());
 
                 }

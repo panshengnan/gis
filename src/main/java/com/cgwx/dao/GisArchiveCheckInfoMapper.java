@@ -11,9 +11,9 @@ public interface GisArchiveCheckInfoMapper {
     int insert(GisArchiveCheckInfo record);
 
     List<GisArchiveCheckInfo> selectAll();
-    @Select({"SELECT file_name\nFROM pdm_archive_check_info\nWHERE product_id = #{tempId} "})
+    @Select({"SELECT file_name\nFROM gis_archive_check_info\nWHERE product_id = #{tempId} "})
     String selectFileNameById(@Param("tempId") String var1);
 
-    @Select({"SELECT temporary_path\nFROM pdm_archive_check_info\nWHERE product_id = #{tempId} "})
+    @Select({"SELECT temporary_path\nFROM gis_archive_check_info\nWHERE product_id = #{tempId} "})
     String selectTemporaryPathById(@Param("tempId") String var1);
 }
