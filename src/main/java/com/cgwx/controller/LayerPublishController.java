@@ -36,7 +36,7 @@ public class LayerPublishController {
 //        ilayerPublishService.publishStyle(styleFile,"classes");
 //        ilayerPublishService.publishShp("cite", "test7272", "test7272", "D:\\geoserver\\data_dir\\data\\tifPublishTest\\181222_6247_0000", styleFile);
 
-        ilayerPublishService.publishShpForArchive("test7293","","test7293","test7293","D:\\test","D:\\geoserver\\data_dir\\data\\cite\\test7272\\class2.sld");
+        ilayerPublishService.publishShpForArchive("test7293","","test7293","test7293","D:\\test","D:\\geoserver\\data_dir\\data\\cite\\test7272\\class2.sld","");
         return ResultUtil.success("");
     }
 

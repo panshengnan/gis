@@ -179,7 +179,7 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
     }
 
     @Override
-    public boolean publishShpForArchive(String productId, String singleId, String dataStore, String layerName, String filePath, String sldPath) {
+    public boolean publishShpForArchive(String productId, String singleId, String dataStore, String layerName, String filePath, String sldPath,String legendUrl) {
 
         File styleFile;
         String style = "generic";
@@ -191,7 +191,6 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
         } else {
             styleFile = null;
         }
-
         try {
             String dbfPath = getDbfPath(filePath);
             String dbfName = dbfPath.substring(0, dbfPath.lastIndexOf("."));
@@ -212,6 +211,7 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
             gisProductLayerInfo.setSingleId(singleId);
             gisProductLayerInfo.setSldPath(sldPath);
             gisProductLayerInfo.setLayerName(style);
+            gisProductLayerInfo.setLegend(legendUrl);
             gisProductLayerInfoMapper.insert(gisProductLayerInfo);
         } else {
             return false;

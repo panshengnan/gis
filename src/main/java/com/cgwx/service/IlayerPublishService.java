@@ -25,7 +25,7 @@ public interface IlayerPublishService {
     boolean updateStyle(String sldBody, String styleName);
     boolean publishShp(String workSpace,String dataStore,String layerName,File zipFileSource,String srs,String style);
     boolean publishShp(String workSpace,String dataStore,String layerName,String filePath,File sldFile);
-    boolean publishShpForArchive(String productId,String singleId,String dataStore,String layerName,String filePath,String sldPath);
+    boolean publishShpForArchive(String productId,String singleId,String dataStore,String layerName,String filePath,String sldPath,String legendUrl);
     void rename(String path, String newName);
     List<String> getShpFileList(String path);
     String getShpPathWithoutCutline(String parentPath);
