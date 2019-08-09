@@ -205,7 +205,7 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
 
     @Async("taskExecutor")
     @Override
-    public boolean publishThemeShpForArchive(String productId, String singleId, String dataStore, String layerName, String filePath, String sldPath, String legendUrl) {
+    public Object publishThemeShpForArchive(String productId, String singleId, String dataStore, String layerName, String filePath, String sldPath, String legendUrl) {
 
         File styleFile;
         String style = "generic";
@@ -1324,7 +1324,7 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
 
     @Async("taskExecutor")
     @Override
-    public boolean publishThemeTifForArchive(JSONObject msg) throws IOException, FactoryException, TransformException {
+    public Object publishThemeTifForArchive(JSONObject msg) throws IOException, FactoryException, TransformException {
 
         JSONObject jsonObject = publishTif(msg.getString("path"), "layerPublish", "#FFFFFF");
         updateThemeticProductDetailImgGeo(msg.getString("productId"), msg.getString("singleId"), jsonObject.getString("geoJson"));

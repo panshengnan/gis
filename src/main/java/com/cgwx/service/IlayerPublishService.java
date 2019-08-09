@@ -25,7 +25,7 @@ public interface IlayerPublishService {
     boolean updateStyle(String sldBody, String styleName);
     boolean publishShp(String workSpace,String dataStore,String layerName,File zipFileSource,String srs,String style);
     boolean publishShp(String workSpace,String dataStore,String layerName,String filePath,File sldFile);
-    boolean publishThemeShpForArchive(String productId,String singleId,String dataStore,String layerName,String filePath,String sldPath,String legendUrl);
+    Object publishThemeShpForArchive(String productId,String singleId,String dataStore,String layerName,String filePath,String sldPath,String legendUrl);
     void rename(String path, String newName);
     List<String> getShpFileList(String path);
     String getShpPathWithoutCutline(String parentPath);
@@ -60,6 +60,6 @@ public interface IlayerPublishService {
     boolean resetStyle(String styleName);
     void updateThemeticProductDetailImgGeo(String productId,String singleId,String geoJson);
     String getShpLatLonBounding(String path) throws FactoryException, TransformException;
-    boolean publishThemeTifForArchive(JSONObject msg) throws IOException, FactoryException, TransformException;
+    Object publishThemeTifForArchive(JSONObject msg) throws IOException, FactoryException, TransformException;
 
 }
