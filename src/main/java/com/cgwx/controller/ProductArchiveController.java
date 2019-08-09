@@ -441,11 +441,7 @@ public class ProductArchiveController {
                 content.put("count", Integer.toString(i));
                 System.out.println("CONTENT!!!!!!" + content);
                 //调用tif发布
-                try {
-                    Result result = ilayerPublishService.publishTifToGeoserver(content);
-                }catch (ParserConfigurationException pE){
-                    pE.printStackTrace();
-                }
+                 ilayerPublishService.publishThemeTifForArchive(content);
                 System.out.println("正在发布tif");
                 //开始发布tif
             } else {
@@ -461,16 +457,14 @@ public class ProductArchiveController {
                     String sldpath ="";
                     if(iProductArchiveService.getSldName(singlePath)!=""){
                         sldpath = singlePath + "\\" + iProductArchiveService.getSldName(singlePath);
-
                     }
                     String lengendUrl ="";
                     if(iProductArchiveService.getLegendUrl(singlePath)!="")
                     {
-                        lengendUrl=iProductArchiveService.getLegendUrl(singlePath) ;
+                        lengendUrl=iProductArchiveService.getLegendUrl(singlePath);
                     }
                     //ss0808 调用封装的发布接口
-                    ilayerPublishService.publishShpForArchive(productId,jsonObjectTmp.getString("singleTempId"),layerName,layerName,filepath,sldpath,lengendUrl);
-
+                    ilayerPublishService.publishThemeShpForArchive(productId,jsonObjectTmp.getString("singleTempId"),layerName,layerName,singlePath,sldpath,lengendUrl);
                 }
             }
         }

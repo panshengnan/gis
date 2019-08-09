@@ -36,7 +36,7 @@ public class LayerPublishController {
 //        ilayerPublishService.publishStyle(styleFile,"classes");
 //        ilayerPublishService.publishShp("cite", "test7272", "test7272", "D:\\geoserver\\data_dir\\data\\tifPublishTest\\181222_6247_0000", styleFile);
 
-        ilayerPublishService.publishShpForArchive("test7293","","test7293","test7293","D:\\test","D:\\geoserver\\data_dir\\data\\cite\\test7272\\class2.sld","");
+        ilayerPublishService.publishThemeShpForArchive("test7293","","test7293","test7293","D:\\test","D:\\geoserver\\data_dir\\data\\cite\\test7272\\class2.sld","");
         return ResultUtil.success("");
     }
 
@@ -325,6 +325,17 @@ public class LayerPublishController {
 
         AttributeValuesDto attributeValuesDto = ilayerPublishService.getAttributeValueInfo(productId, singleId, attributeName);
         return ResultUtil.success(attributeValuesDto);
+    }
+
+    @RequestMapping(value = "/resetLayer")
+    @CrossOrigin()
+    @ResponseBody
+    public Result resetLayer(@RequestParam(value = "productId", required = true) String productId, @RequestParam(value = "singleId", required = true) String singleId) {
+
+//        AttributeValuesDto attributeValuesDto = ilayerPublishService.getAttributeValueInfo(productId, singleId, attributeName);
+        SldPathAndNameDto sldPathAndNameDto = ilayerPublishService.getSldPathAndName(productId, singleId);
+        ilayerPublishService.resetStyle(sldPathAndNameDto.getSldName());
+        return ResultUtil.success("提交成功！");
     }
 
 }
