@@ -8,6 +8,7 @@ import com.cgwx.common.utils.PublishLayer;
 import com.cgwx.dao.GisProductLayerInfoMapper;
 import com.cgwx.dao.GisProductShpAttributeDetailInfoMapper;
 import com.cgwx.dao.GisProductShpAttributeInfoMapper;
+import com.cgwx.dao.GisThemeticProductDetailInfoMapper;
 import com.cgwx.data.dto.AttributeInfoDto;
 import com.cgwx.data.dto.AttributeValuesDto;
 import com.cgwx.data.dto.SldPathAndNameDto;
@@ -52,6 +53,7 @@ import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -69,6 +71,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static org.geotools.resources.Classes.CHARACTER;
+import static org.geotools.resources.Classes.primitiveToWrapper;
 
 @Service
 public class LayerPublishServiceImpl implements IlayerPublishService {
@@ -90,6 +93,9 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
 
     @Autowired
     private GisProductShpAttributeDetailInfoMapper gisProductShpAttributeDetailInfoMapper;
+
+    @Autowired
+    private GisThemeticProductDetailInfoMapper gisThemeticProductDetailInfoMapper;
 
     @Autowired
     LayerInfo layerInfo;
@@ -179,7 +185,27 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
     }
 
     @Override
-    public boolean publishShpForArchive(String productId, String singleId, String dataStore, String layerName, String filePath, String sldPath,String legendUrl) {
+    public void updateThemeticProductDetailImgGeo(String productId, String singleId, String geoJson) {
+
+        gisThemeticProductDetailInfoMapper.updateThemeticProductDetailImgGeo(productId, singleId, geoJson);
+    }
+
+    @Override
+    public String getShpLatLonBounding(String path) throws FactoryException, TransformException {
+
+        SimpleFeatureCollection colls1 = this.readShp(path);
+        Envelope envelope = colls1.getBounds();
+        MathTransform transform = CRS.findMathTransform(colls1.getBounds().getCoordinateReferenceSystem(), DefaultGeographicCRS.WGS84);
+        com.vividsolutions.jts.geom.Envelope envelope1 = new com.vividsolutions.jts.geom.Envelope(envelope.getMinimum(0), envelope.getMaximum(0), envelope.getMinimum(1), envelope.getMaximum(1));
+        envelope1 = JTS.transform(envelope1, transform);
+        com.vividsolutions.jts.geom.Polygon polygon = JTS.toGeometry(envelope1);
+        System.out.println(polygon);
+        return transformPOLYGONToPolygon(getGj(polygon.toString()));
+    }
+
+    @Async("taskExecutor")
+    @Override
+    public boolean publishThemeShpForArchive(String productId, String singleId, String dataStore, String layerName, String filePath, String sldPath, String legendUrl) {
 
         File styleFile;
         String style = "generic";
@@ -204,13 +230,20 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
         } catch (Exception e) {
             return false;
         }
+        try {
+            String shpPath = getShpPathWithoutCutline(filePath);
+            String geoJson = getShpLatLonBounding(shpPath);
+            updateThemeticProductDetailImgGeo(productId, singleId, geoJson);
+        } catch (Exception e) {
+            return false;
+        }
         if (publishShp("layerPublish", layerName, layerName, filePath, styleFile)) {
             GisProductLayerInfo gisProductLayerInfo = new GisProductLayerInfo();
             gisProductLayerInfo.setProductId(productId);
-            gisProductLayerInfo.setLayerName(layerName);
+            gisProductLayerInfo.setLayerName("layerPublish:" + layerName);
             gisProductLayerInfo.setSingleId(singleId);
             gisProductLayerInfo.setSldPath(sldPath);
-            gisProductLayerInfo.setLayerName(style);
+            gisProductLayerInfo.setStyleName(style);
             gisProductLayerInfo.setLegend(legendUrl);
             gisProductLayerInfoMapper.insert(gisProductLayerInfo);
         } else {
@@ -1194,6 +1227,116 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
         geojson = geojson.replace("POLYGON \"", "Polygon\"");
         return geojson;
 
+    }
+
+    @Override
+    public boolean resetStyle(String styleName) {
+
+        String defaultStyle = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<StyledLayerDescriptor version=\"1.0.0\" \n" +
+                "                       xsi:schemaLocation=\"http://www.opengis.net/sld StyledLayerDescriptor.xsd\" \n" +
+                "                       xmlns=\"http://www.opengis.net/sld\" \n" +
+                "                       xmlns:ogc=\"http://www.opengis.net/ogc\" \n" +
+                "                       xmlns:xlink=\"http://www.w3.org/1999/xlink\" \n" +
+                "                       xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
+                "  <NamedLayer>\n" +
+                "    <Name>generic</Name>\n" +
+                "    <UserStyle>\n" +
+                "      <Title>Generic</Title>\n" +
+                "      <Abstract>Generic style</Abstract>\n" +
+                "      <FeatureTypeStyle>\n" +
+                "        <Rule>\n" +
+                "          <Name>raster</Name>\n" +
+                "          <Title>raster</Title>\n" +
+                "          <ogc:Filter>\n" +
+                "            <ogc:PropertyIsEqualTo>\n" +
+                "              <ogc:Function name=\"isCoverage\"/>\n" +
+                "              <ogc:Literal>true</ogc:Literal>\n" +
+                "            </ogc:PropertyIsEqualTo>\n" +
+                "          </ogc:Filter>\n" +
+                "          <RasterSymbolizer>\n" +
+                "            <Opacity>1.0</Opacity>\n" +
+                "          </RasterSymbolizer>\n" +
+                "        </Rule>\n" +
+                "        <Rule>\n" +
+                "          <Name>Polygon</Name>\n" +
+                "          <Title>Polygon</Title>\n" +
+                "          <ogc:Filter>\n" +
+                "            <ogc:PropertyIsEqualTo>\n" +
+                "              <ogc:Function name=\"dimension\">\n" +
+                "                <ogc:Function name=\"geometry\"/>\n" +
+                "              </ogc:Function>\n" +
+                "              <ogc:Literal>2</ogc:Literal>\n" +
+                "            </ogc:PropertyIsEqualTo>\n" +
+                "          </ogc:Filter>\n" +
+                "          <PolygonSymbolizer>\n" +
+                "            <Fill>\n" +
+                "              <CssParameter name=\"fill\">#AAAAAA</CssParameter>\n" +
+                "            </Fill>\n" +
+                "            <Stroke>\n" +
+                "              <CssParameter name=\"stroke\">#000000</CssParameter>\n" +
+                "              <CssParameter name=\"stroke-width\">1</CssParameter>\n" +
+                "            </Stroke>\n" +
+                "          </PolygonSymbolizer>\n" +
+                "        </Rule>\n" +
+                "        <Rule>\n" +
+                "          <Name>Line</Name>\n" +
+                "          <Title>Line</Title>\n" +
+                "          <ogc:Filter>\n" +
+                "            <ogc:PropertyIsEqualTo>\n" +
+                "              <ogc:Function name=\"dimension\">\n" +
+                "                <ogc:Function name=\"geometry\"/>\n" +
+                "              </ogc:Function>\n" +
+                "              <ogc:Literal>1</ogc:Literal>\n" +
+                "            </ogc:PropertyIsEqualTo>\n" +
+                "          </ogc:Filter>\n" +
+                "          <LineSymbolizer>\n" +
+                "            <Stroke>\n" +
+                "              <CssParameter name=\"stroke\">#0000FF</CssParameter>\n" +
+                "              <CssParameter name=\"stroke-opacity\">1</CssParameter>\n" +
+                "            </Stroke>\n" +
+                "          </LineSymbolizer>\n" +
+                "        </Rule>\n" +
+                "        <Rule>\n" +
+                "          <Name>point</Name>\n" +
+                "          <Title>Point</Title>\n" +
+                "          <ElseFilter/>\n" +
+                "          <PointSymbolizer>\n" +
+                "            <Graphic>\n" +
+                "              <Mark>\n" +
+                "                <WellKnownName>square</WellKnownName>\n" +
+                "                <Fill>\n" +
+                "                  <CssParameter name=\"fill\">#FF0000</CssParameter>\n" +
+                "                </Fill>\n" +
+                "              </Mark>\n" +
+                "              <Size>6</Size>\n" +
+                "            </Graphic>\n" +
+                "          </PointSymbolizer>\n" +
+                "        </Rule>\n" +
+                "        <VendorOption name=\"ruleEvaluation\">first</VendorOption>\n" +
+                "      </FeatureTypeStyle>\n" +
+                "    </UserStyle>\n" +
+                "  </NamedLayer>\n" +
+                "</StyledLayerDescriptor>\n";
+        updateStyle(defaultStyle, styleName);
+        return true;
+    }
+
+    @Async("taskExecutor")
+    @Override
+    public boolean publishThemeTifForArchive(JSONObject msg) throws IOException, FactoryException, TransformException {
+
+        JSONObject jsonObject = publishTif(msg.getString("path"), "layerPublish", "#FFFFFF");
+        updateThemeticProductDetailImgGeo(msg.getString("productId"), msg.getString("singleId"), jsonObject.getString("geoJson"));
+        GisProductLayerInfo gisProductLayerInfo = new GisProductLayerInfo();
+        gisProductLayerInfo.setProductId(msg.getString("productId"));
+        gisProductLayerInfo.setLayerName("layerPublish:" + jsonObject.getString("fileName"));
+        gisProductLayerInfo.setSingleId(msg.getString("singleId"));
+        gisProductLayerInfoMapper.insert(gisProductLayerInfo);
+        if (Integer.parseInt(msg.getString("productType")) == 1) {
+            updateThemeticProductDetailImgGeo(msg.getString("productId"), msg.getString("singleId"), jsonObject.getString("geoJson"));
+        }
+        return true;
     }
 
 }
