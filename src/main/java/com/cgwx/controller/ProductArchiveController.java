@@ -17,12 +17,15 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -30,7 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@EnableAsync
 @CrossOrigin
 @Controller
 public class ProductArchiveController {
@@ -411,6 +414,13 @@ public class ProductArchiveController {
             pdmThemeticProductDetailInfo.setSinglePeriodProductId(jsonObjectTmp.getString("singleTempId"));
             pdmThemeticProductDetailInfo.setSinglePeriodProductName(jsonObjectTmp.getString("singleName"));
             iProductArchiveService.updateThemeticProductDetail(pdmThemeticProductDetailInfo);
+            //移到上边
+            GisThemeticProductInfo pdmThemeticProductInfo = new GisThemeticProductInfo();
+            pdmThemeticProductInfo.setProductId(productId);
+            pdmThemeticProductInfo.setParentDirectory(officialPath);
+            pdmThemeticProductInfo.setThemeticProductName(productName);
+            iProductArchiveService.updateThemeticProduct(pdmThemeticProductInfo);
+            iProductDownloadService.generateProductLink(1, productId, productName);
             //下面这段是新加的
             String singlePath = officialPath + '\\' + jsonObjectTmp.getString("singleName");
             if (iProductArchiveService.isExistTif(singlePath)) {
@@ -430,67 +440,42 @@ public class ProductArchiveController {
                 content.put("productType", 1);//专题
                 content.put("count", Integer.toString(i));
                 System.out.println("CONTENT!!!!!!" + content);
-                amqpTemplate.convertAndSend("publishOrder123", content);
+                //调用tif发布
+                try {
+                    Result result = ilayerPublishService.publishTifToGeoserver(content);
+                }catch (ParserConfigurationException pE){
+                    pE.printStackTrace();
+                }
                 System.out.println("正在发布tif");
                 //开始发布tif
             } else {
                 if (iProductArchiveService.isExistShp(singlePath)) {
-
-                    File zipFileSource = new File(singlePath + "\\" + jsonObjectTmp.getString("singleName") + ".zip");
+                    String filepath = singlePath + "\\" + jsonObjectTmp.getString("singleName") + ".zip";
+                    File zipFileSource = new File(filepath);
+                    //File zipFileSource = new File(singlePath + "\\" + jsonObjectTmp.getString("singleName") + ".zip");
                     String layerName = productId.substring(16, productId.length() - 1) + jsonObjectTmp.getString("singleTempId");
                     iProductArchiveService.rename(singlePath, layerName);
                     List<String> fileList = iProductArchiveService.getShpFileList(singlePath);
                     iProductArchiveService.exportZip(fileList, zipFileSource);
 //                    iProductArchiveService.rename(singlePath, jsonObjectTmp.getString("singleName"));
-                    String RESTURL = "http://192.168.20.7:8086/geoserver";
-                    String RESTUSER = "admin";
-                    String RESTPW = "geoserver";
-                    List<String> workspaces = null;
-                    String result = "";
-                    try {
-                        GeoServerRESTReader reader = new GeoServerRESTReader(RESTURL, RESTUSER, RESTPW);
-                        GeoServerRESTPublisher publisher = new GeoServerRESTPublisher(RESTURL, RESTUSER, RESTPW);
-//
-//
-                        workspaces = reader.getWorkspaceNames();
-                        if (workspaces.contains("tifPublishTest")) {
-                            if (publisher.publishShp("tifPublishTest", layerName, layerName, zipFileSource, ilayerPublishService.getShpEPSG(ilayerPublishService.getShpPathWithoutCutline(singlePath)))) {//ss0726
-                                result = "发布成功！";
-                            } else {
-                                result = "发布失败！";
-                            }
-                        }
-                        System.out.println(result);
-                    } catch (Exception mue) {
-                        mue.printStackTrace();
+                    String sldpath ="";
+                    if(iProductArchiveService.getSldName(singlePath)!=""){
+                        sldpath = singlePath + "\\" + iProductArchiveService.getSldName(singlePath);
+
                     }
-                    zipFileSource.delete();
-                    String shpPath = ilayerPublishService.getShpPathWithoutCutline(singlePath);
-                    System.out.println("shp的路径是：" + shpPath);
-//                    String geoJson = ilayerPublishService.getShpLatLonBounding(shpPath);//ss0731
-//                    System.out.println("geoJson是：" + geoJson);
-                    iProductArchiveService.rename(singlePath, jsonObjectTmp.getString("singleName"));
-//                    ilayerPublishService.updateThemeticProductDetailImgGeo(productId, jsonObjectTmp.getString("singleTempId"), geoJson);//ss0731
-                    //////
-                    GisProductLayerInfo pdmProductLayerInfo = new GisProductLayerInfo();
-                    pdmProductLayerInfo.setProductId(productId);
-                    pdmProductLayerInfo.setSingleId(jsonObjectTmp.getString("singleTempId"));
-                    pdmProductLayerInfo.setLayerName("tifPublishTest:" + layerName);
-                    System.out.println("更新图层中");
-//                    ilayerPublishService.updateProductLayerInfo(pdmProductLayerInfo);//ss0731
-                    System.out.println("更新图层完毕！图层名字：" + pdmProductLayerInfo.getLayerName());
+                    String lengendUrl ="";
+                    if(iProductArchiveService.getLegendUrl(singlePath)!="")
+                    {
+                        lengendUrl=iProductArchiveService.getLegendUrl(singlePath) ;
+                    }
+                    //ss0808 调用封装的发布接口
+                    ilayerPublishService.publishShpForArchive(productId,jsonObjectTmp.getString("singleTempId"),layerName,layerName,filepath,sldpath,lengendUrl);
 
                 }
             }
         }
         //上面这段是新加的
 
-        GisThemeticProductInfo pdmThemeticProductInfo = new GisThemeticProductInfo();
-        pdmThemeticProductInfo.setProductId(productId);
-        pdmThemeticProductInfo.setParentDirectory(officialPath);
-        pdmThemeticProductInfo.setThemeticProductName(productName);
-        iProductArchiveService.updateThemeticProduct(pdmThemeticProductInfo);
-        iProductDownloadService.generateProductLink(1, productId, productName);
         //操作一波归档记录表
         GisArchiveRecordsInfo pdmArchiveRecordsInfo = new GisArchiveRecordsInfo();
         pdmArchiveRecordsInfo.setArchiveResult(1);

@@ -896,7 +896,45 @@ public class IProductArchiveServiceImpl implements IProductArchiveService {
         }
         return false;
     }
+    @Override
+    public String  getSldName(String path){
+        File file = new File(path);
+        File[] subFiles = file.listFiles();
+        //获取e盘下所有的文件或文件夹对象
+        if (null!=subFiles){
+            for (File subFile : subFiles) {
+                if(subFile.isFile() && subFile.getName().endsWith(".sld"))
+                    return subFile.getName();
+            }
+        }
+        return "";
+    }
+    @Override
+    public String getLegendUrl(String path){
+//        File file = new File(path);
+////        File[] subFiles = file.listFiles();
+////        if (null!=subFiles){
+////            for (File subFile : subFiles) {
+////                if(subFile.toString().contains("Legend"))
+////                    return subFile.toString();
+////            }
+////        }
+////        return "";
+        String legendPath = "";
+        File file = new File(path);
+        File[] tempList = file.listFiles();
+        for (int i = 0; i < tempList.length; i++) {
+            if (tempList[i].isFile()) {
+                String tmp = tempList[i].toString();
+                String postfix = tmp.substring(0,tmp.lastIndexOf('.'));
 
+                if (postfix.contains("Legend"))
+                    legendPath = tmp;
+            }
+        }
+            System.out.println(legendPath);
+        return legendPath;
+    }
 
     ///////////////////////////////////////////////////
     @Override

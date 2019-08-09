@@ -67,4 +67,8 @@ public interface IProductArchiveService {
     List<String> getShpFileList(String path);
     void rename(String path, String newName);
     String combination(String key, String value, boolean isEnd);
+    //判断是否存在sld文件
+    String getSldName(String path);
+    //判断是否存在sld文件
+    String getLegendUrl(String path);
 }

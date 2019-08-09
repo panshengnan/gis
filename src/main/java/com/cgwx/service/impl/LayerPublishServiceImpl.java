@@ -52,6 +52,8 @@ import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -178,6 +180,7 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
         return true;
     }
 
+    @Async("taskExecutor")
     @Override
     public boolean publishShpForArchive(String productId, String singleId, String dataStore, String layerName, String filePath, String sldPath,String legendUrl) {
 
@@ -1100,7 +1103,7 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
 
         return ResultUtil.success();
     }
-
+    @Async("taskExecutor")
     @Override
     public JSONObject publishTif(String filePath, String nameSpace, String borderColor) throws IOException, FactoryException, TransformException {
         JSONObject jsonObject = new JSONObject();
