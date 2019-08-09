@@ -228,6 +228,7 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
             dbfFile.delete();
             tmpDbfFile.renameTo(new File(dbfPath));
         } catch (Exception e) {
+            System.out.println("读写dbf文件出错！");
             return false;
         }
         try {
@@ -235,6 +236,7 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
             String geoJson = getShpLatLonBounding(shpPath);
             updateThemeticProductDetailImgGeo(productId, singleId, geoJson);
         } catch (Exception e) {
+            System.out.println("获取边界出错！");
             return false;
         }
         if (publishShp("layerPublish", layerName, layerName, filePath, styleFile)) {
@@ -247,6 +249,7 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
             gisProductLayerInfo.setLegend(legendUrl);
             gisProductLayerInfoMapper.insert(gisProductLayerInfo);
         } else {
+            System.out.println("发布出错！");
             return false;
         }
         return true;
