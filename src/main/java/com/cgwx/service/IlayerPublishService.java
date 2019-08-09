@@ -60,6 +60,6 @@ public interface IlayerPublishService {
     boolean resetStyle(String styleName);
     void updateThemeticProductDetailImgGeo(String productId,String singleId,String geoJson);
     String getShpLatLonBounding(String path) throws FactoryException, TransformException;
-    boolean publishThemeTifForArchive(JSONObject msg) throws IOException, FactoryException, TransformException;
+    Object publishThemeTifForArchive(JSONObject msg) throws IOException, FactoryException, TransformException;
 
 }
