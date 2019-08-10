@@ -446,13 +446,13 @@ public class ProductArchiveController {
                 //开始发布tif
             } else {
                 if (iProductArchiveService.isExistShp(singlePath)) {
-                    String filepath = singlePath + "\\" + jsonObjectTmp.getString("singleName") + ".zip";
-                    File zipFileSource = new File(filepath);
+//                    String filepath = singlePath + "\\" + jsonObjectTmp.getString("singleName") + ".zip";
+//                    File zipFileSource = new File(filepath);
                     //File zipFileSource = new File(singlePath + "\\" + jsonObjectTmp.getString("singleName") + ".zip");
                     String layerName = productId.substring(16, productId.length() - 1) + jsonObjectTmp.getString("singleTempId");
-                    iProductArchiveService.rename(singlePath, layerName);
-                    List<String> fileList = iProductArchiveService.getShpFileList(singlePath);
-                    iProductArchiveService.exportZip(fileList, zipFileSource);
+//                    iProductArchiveService.rename(singlePath, layerName);
+//                    List<String> fileList = iProductArchiveService.getShpFileList(singlePath);
+//                    iProductArchiveService.exportZip(fileList, zipFileSource);
 //                    iProductArchiveService.rename(singlePath, jsonObjectTmp.getString("singleName"));
                     String sldpath ="";
                     if(iProductArchiveService.getSldName(singlePath)!=""){
