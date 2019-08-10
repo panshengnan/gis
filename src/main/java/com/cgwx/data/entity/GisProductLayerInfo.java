@@ -13,6 +13,8 @@ public class GisProductLayerInfo {
 
     private String legend;
 
+    private String isShp;
+
     public String getProductId() {
         return productId;
     }
@@ -59,5 +61,13 @@ public class GisProductLayerInfo {
 
     public void setLegend(String legend) {
         this.legend = legend == null ? null : legend.trim();
+    }
+
+    public String getIsShp() {
+        return isShp;
+    }
+
+    public void setIsShp(String isShp) {
+        this.isShp = isShp == null ? null : isShp.trim();
     }
 }

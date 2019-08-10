@@ -247,6 +247,7 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
             gisProductLayerInfo.setSldPath(sldPath);
             gisProductLayerInfo.setStyleName(style);
             gisProductLayerInfo.setLegend(legendUrl);
+            gisProductLayerInfo.setIsShp("true");
             gisProductLayerInfoMapper.insert(gisProductLayerInfo);
         } else {
             System.out.println("发布出错！");
@@ -1335,6 +1336,7 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
         gisProductLayerInfo.setProductId(msg.getString("productId"));
         gisProductLayerInfo.setLayerName("layerPublish:" + jsonObject.getString("fileName"));
         gisProductLayerInfo.setSingleId(msg.getString("singleId"));
+        gisProductLayerInfo.setIsShp("false");
         gisProductLayerInfoMapper.insert(gisProductLayerInfo);
         if (Integer.parseInt(msg.getString("productType")) == 1) {
             updateThemeticProductDetailImgGeo(msg.getString("productId"), msg.getString("singleId"), jsonObject.getString("geoJson"));

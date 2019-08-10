@@ -8,17 +8,18 @@
     <result column="sld_path" property="sldPath" jdbcType="VARCHAR" />
     <result column="style_name" property="styleName" jdbcType="VARCHAR" />
     <result column="legend" property="legend" jdbcType="VARCHAR" />
+    <result column="is_shp" property="isShp" jdbcType="VARCHAR" />
   </resultMap>
   <insert id="insert" parameterType="com.cgwx.data.entity.GisProductLayerInfo" >
     insert into gis_product_layer_info (product_id, single_id, layer_name, 
-      sld_path, style_name, legend
-      )
+      sld_path, style_name, legend, 
+      is_shp)
     values (#{productId,jdbcType=VARCHAR}, #{singleId,jdbcType=VARCHAR}, #{layerName,jdbcType=VARCHAR}, 
-      #{sldPath,jdbcType=VARCHAR}, #{styleName,jdbcType=VARCHAR}, #{legend,jdbcType=VARCHAR}
-      )
+      #{sldPath,jdbcType=VARCHAR}, #{styleName,jdbcType=VARCHAR}, #{legend,jdbcType=VARCHAR}, 
+      #{isShp,jdbcType=VARCHAR})
   </insert>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select product_id, single_id, layer_name, sld_path, style_name, legend
+    select product_id, single_id, layer_name, sld_path, style_name, legend, is_shp
     from gis_product_layer_info
   </select>
 </mapper>

@@ -4,7 +4,8 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
     <classPathEntry
-    location="C:\Users\user\.m2\repository\org\postgresql\postgresql\42.2.2\postgresql-42.2.2.jar"/>
+
+            location="C:\Users\37753\.m2\repository\postgresql\postgresql\9.1-901-1.jdbc4\postgresql-9.1-901-1.jdbc4.jar"/>
     <context id="sysGenerator" targetRuntime="MyBatis3Simple">
         <commentGenerator>
             <!-- 是否生成注释代时间戳 -->
