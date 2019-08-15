@@ -21,6 +21,7 @@ import net.lingala.zip4j.util.Zip4jConstants;
 import net.sf.json.JSONException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.ibatis.annotations.Param;
 import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -103,6 +104,9 @@ public class IProductArchiveServiceImpl implements IProductArchiveService {
 
     @Autowired
     GisSensorInfoMapper pdmSensorInfoMapper;
+
+    @Autowired
+    GisProductStoreLinkInfoMapper gisProductStoreLinkInfoMapper;
 
     StreamDecoder sd;
 
@@ -910,29 +914,17 @@ public class IProductArchiveServiceImpl implements IProductArchiveService {
         return "";
     }
     @Override
-    public String getLegendUrl(String path){
-//        File file = new File(path);
-////        File[] subFiles = file.listFiles();
-////        if (null!=subFiles){
-////            for (File subFile : subFiles) {
-////                if(subFile.toString().contains("Legend"))
-////                    return subFile.toString();
-////            }
-////        }
-////        return "";
+    public String getLegendUrl(String productId){
+        List<GisProductStoreLinkInfo> StoreLinkList = new ArrayList<>();
+        StoreLinkList =gisProductStoreLinkInfoMapper.selectProductStoreLinksByProductId(productId);
         String legendPath = "";
-        File file = new File(path);
-        File[] tempList = file.listFiles();
-        for (int i = 0; i < tempList.length; i++) {
-            if (tempList[i].isFile()) {
-                String tmp = tempList[i].toString();
-                String postfix = tmp.substring(0,tmp.lastIndexOf('.'));
 
-                if (postfix.contains("Legend"))
+        for (int i = 0; i < StoreLinkList.size(); i++) {
+                String tmp = StoreLinkList.get(i).getStoreLink();
+                String postfix = tmp.substring(0,tmp.lastIndexOf('.'));
+                if (postfix.contains(".Legend"))
                     legendPath = tmp;
-            }
         }
-            System.out.println(legendPath);
         return legendPath;
     }
 

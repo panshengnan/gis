@@ -69,6 +69,6 @@ public interface IProductArchiveService {
     String combination(String key, String value, boolean isEnd);
     //判断是否存在sld文件
     String getSldName(String path);
-    //判断是否存在sld文件
-    String getLegendUrl(String path);
+    //获取图例url
+    String getLegendUrl(String productId);
 }

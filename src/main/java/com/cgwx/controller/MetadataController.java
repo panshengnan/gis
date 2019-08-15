@@ -355,7 +355,7 @@ public class MetadataController
 
 
 
-    @RequestMapping(value = "/getThemeticProductListAndDeatailByIndustry")  //专题产品列表 简化按行业进行查询
+    @RequestMapping(value = "/getThemeticProductListByIndustry")  //专题产品列表 简化按行业进行查询
     @CrossOrigin()
     @ResponseBody
     public Result getThemeticProductListByGeos(@RequestParam(value = "client_name", required = true) String clientname,
@@ -372,15 +372,24 @@ public class MetadataController
         //System.out.println(jsonObject.getString("industry"));
         if(industry ==0)
         {
+//测试ss0813
+            Industry industrytemp1=new Industry();
+            industrytemp1.setLevel1(5);
+            industrytemp1.setLevel2(10000);
+            queryIndustryList.add(industrytemp1);
+            Industry industrytemp2=new Industry();
+            industrytemp2.setLevel1(9);
+            industrytemp2.setLevel2(10000);
+            queryIndustryList.add(industrytemp2);
 
-            queryIndustryList =null;
+            //            queryIndustryList =null;
         }
         else
         {
-            Industry industrytemp=new Industry();
-            industrytemp.setLevel1(industry);
-            industrytemp.setLevel2(10000);
-            queryIndustryList.add(industrytemp);
+//            Industry industrytemp=new Industry();
+//            industrytemp.setLevel1(industry);
+//            industrytemp.setLevel2(10000);
+//            queryIndustryList.add(industrytemp);
         }
         List<ThemeticProductListByGeos> themeticProductListByGeosResultList=new ArrayList<ThemeticProductListByGeos>();
         //System.out.println("final");

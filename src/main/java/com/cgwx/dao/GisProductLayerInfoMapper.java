@@ -53,5 +53,15 @@ public interface GisProductLayerInfoMapper {
             + "</if>"+
             "</script>"})
     String getLayerLegend(@Param("productId")String productId,@Param("singleId")String singleId);
+
+    @Select({"<script>"+
+            "SELECT is_shp\n  " +
+            "  FROM gis_product_layer_info\n  " +
+            "    WHERE product_id = #{productId} "+
+            "<if test='null!= singleId &amp; !\"\".equals(singleId)'>" +
+            " and single_id = #{singleId} "
+            + "</if>"+
+            "</script>"})
+    String getIsShp(@Param("productId")String productId,@Param("singleId")String singleId);
 }
 
