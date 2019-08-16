@@ -426,8 +426,8 @@ public class ProductArchiveController {
                 //开始发布tif
                 JSONObject content = new JSONObject();
                 System.out.println("tif文件夹路径：" + officialPath + '\\' + jsonObjectTmp.getString("singleName"));
-//                String tifPath = ilayerPublishService.getTifFilePath(singlePath);//ss0801
-//                content.put("path", tifPath);//注意以后改了
+                String tifPath = ilayerPublishService.getTifFilePath(singlePath);//ss0801
+                content.put("path", tifPath);//注意以后改了
 //                System.out.println("tif路径是：" + content.getString("path"));
 //                //////////////////////////
 //                if (!iProductArchiveService.isExistJpg(singlePath)) {
