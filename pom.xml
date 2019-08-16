@@ -65,6 +65,11 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!--测试注解-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
 
         <!--转xml-->
         <dependency>

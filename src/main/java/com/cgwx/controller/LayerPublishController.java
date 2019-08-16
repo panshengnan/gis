@@ -1,6 +1,7 @@
 package com.cgwx.controller;
 
 
+import com.cgwx.aop.Permission;
 import com.cgwx.aop.result.Result;
 import com.cgwx.aop.result.ResultUtil;
 import com.cgwx.data.dto.AttributeInfoDto;
@@ -9,7 +10,6 @@ import com.cgwx.data.dto.SldPathAndNameDto;
 import com.cgwx.service.IlayerPublishService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class LayerPublishController {
 //        ilayerPublishService.publishStyle(styleFile,"classes");
 //        ilayerPublishService.publishShp("cite", "test7272", "test7272", "D:\\geoserver\\data_dir\\data\\tifPublishTest\\181222_6247_0000", styleFile);
 
-        ilayerPublishService.publishThemeShpForArchive("test7293","","test7293","test7293","D:\\test","D:\\geoserver\\data_dir\\data\\cite\\test7272\\class2.sld","");
+        ilayerPublishService.publishThemeShpForArchive("test7293", "", "test7293", "test7293", "D:\\test", "D:\\geoserver\\data_dir\\data\\cite\\test7272\\class2.sld", "");
         return ResultUtil.success("");
     }
 
@@ -282,17 +281,18 @@ public class LayerPublishController {
         JSONArray xmlJsonArray = styleJsonObj.getJSONArray("attributeInfoDtoList");
         String flag = ilayerPublishService.getAttributeFlag(styleJsonObj.getString("productId"), styleJsonObj.getString("singleId"), styleJsonObj.getString("attributeName"));
         String attributeName = styleJsonObj.getString("attributeName");
+        if (flag != null)
             if (flag.equals("true")) {
-             styleJsonObj.put("attributeName",ilayerPublishService.getAttributeOtherName(styleJsonObj.getString("productId"), styleJsonObj.getString("singleId"), styleJsonObj.getString("attributeName")));
+                styleJsonObj.put("attributeName", ilayerPublishService.getAttributeOtherName(styleJsonObj.getString("productId"), styleJsonObj.getString("singleId"), styleJsonObj.getString("attributeName")));
             }
-            for (int i = 0; i < xmlJsonArray.size(); i++) {
+        for (int i = 0; i < xmlJsonArray.size(); i++) {
             AttributeInfoDto attributeInfoDto = new AttributeInfoDto();
             JSONObject attributeJsonObj = JSONObject.fromObject(xmlJsonArray.get(i));
-            if(flag.equals("true")){
-                String otherValue = ilayerPublishService.getAttributeOtherValue(styleJsonObj.getString("productId"), styleJsonObj.getString("singleId"), attributeName,attributeJsonObj.getString("attributeValue"));
+            if (flag != null){
+            if (flag.equals("true")) {
+                String otherValue = ilayerPublishService.getAttributeOtherValue(styleJsonObj.getString("productId"), styleJsonObj.getString("singleId"), attributeName, attributeJsonObj.getString("attributeValue"));
                 attributeInfoDto.setAttributeValue(otherValue);
-             }
-             else {
+            } }else {
                 attributeInfoDto.setAttributeValue(attributeJsonObj.getString("attributeValue"));
             }
             attributeInfoDto.setFillColor(attributeJsonObj.getString("fillColor"));
@@ -300,7 +300,7 @@ public class LayerPublishController {
             attributeInfoDto.setStrokeColor(attributeJsonObj.getString("strokeColor"));
             attributeInfoDto.setStrokeOpacity(attributeJsonObj.getString("strokeOpacity"));
             attributeInfoDtoList.add(attributeInfoDto);
-            }
+        }
         String ruleXml = ilayerPublishService.generateRuleXml(styleJsonObj.getString("attributeName"), Integer.parseInt(styleJsonObj.getString("valueCount")), attributeInfoDtoList);
         SldPathAndNameDto sldPathAndNameDto = ilayerPublishService.getSldPathAndName(styleJsonObj.getString("productId"), styleJsonObj.getString("singleId"));
         String xmlJson = ilayerPublishService.xml2jsonString(sldPathAndNameDto.getSldPath());
@@ -335,6 +335,14 @@ public class LayerPublishController {
 //        AttributeValuesDto attributeValuesDto = ilayerPublishService.getAttributeValueInfo(productId, singleId, attributeName);
         SldPathAndNameDto sldPathAndNameDto = ilayerPublishService.getSldPathAndName(productId, singleId);
         ilayerPublishService.resetStyle(sldPathAndNameDto.getSldName());
+        return ResultUtil.success("提交成功！");
+    }
+
+    @Permission
+    @RequestMapping(value = "/test0813")
+    @ResponseBody
+    public Object test0813(){
+        System.out.println("sb");
         return ResultUtil.success("提交成功！");
     }
 
