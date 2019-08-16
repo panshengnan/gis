@@ -184,8 +184,8 @@ public class MetadataServiceImpl implements IMetadataService {
            list.get(count).setIsShp(pdmProductLayerInfoMapper.getIsShp(productId,singlePeriodProductIdList.get(count)));
 
            //ss0813 测试数据 后续删除
-           list.get(count).setThumbnailUrl("http://192.168.20.7:8029/长春热岛201309Thumbnail.jpg");
-            list.get(count).setLegendUrl("http://192.168.20.7:8029/长春热岛201309Thumbnail.jpg");
+           list.get(count).setThumbnailUrl(productStoreLinkHead+pdmProductStoreLinkInfoMapper.selectProductthumbnailUrl(productId,singlePeriodProductIdList.get(count)));//productStoreLinkHead+pdmProductStoreLinkInfoMapper.selectProductthumbnailUrl(productId)
+            list.get(count).setLegendUrl(productStoreLinkHead+pdmProductStoreLinkInfoMapper.selectProductLegendUrl(productId,singlePeriodProductIdList.get(count)));
 
         }
         themeticProductDetail.setSinglePeriodThemeticProductDetail(list);
