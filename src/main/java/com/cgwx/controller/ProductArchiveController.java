@@ -38,7 +38,6 @@ import java.util.List;
 @Controller
 public class ProductArchiveController {
 
-
     @Autowired
     IProductArchiveService iProductArchiveService;
 
@@ -458,10 +457,10 @@ public class ProductArchiveController {
                     if(iProductArchiveService.getSldName(singlePath)!=""){
                         sldpath = singlePath + "\\" + iProductArchiveService.getSldName(singlePath);
                     }
-                    String lengendUrl ="";
-                    if(iProductArchiveService.getLegendUrl(singlePath)!="")
+                    String lengendUrl =null;
+                    if(iProductArchiveService.getLegendUrl(productId)!="")
                     {
-                        lengendUrl=iProductArchiveService.getLegendUrl(singlePath);
+                        lengendUrl=iProductArchiveService.getLegendUrl(productId);
                     }
                     //ss0808 调用封装的发布接口
                     ilayerPublishService.publishThemeShpForArchive(productId,jsonObjectTmp.getString("singleTempId"),layerName,layerName,singlePath,sldpath,lengendUrl);

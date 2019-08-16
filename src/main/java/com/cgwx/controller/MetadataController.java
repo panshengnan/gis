@@ -1,6 +1,5 @@
 package com.cgwx.controller;
 
-
 import com.cgwx.aop.result.Result;
 import com.cgwx.aop.result.ResultUtil;
 import com.cgwx.dao.*;
@@ -177,7 +176,6 @@ public class MetadataController
 
     }
 
-
     @RequestMapping(value = "/subdivisionProductList")  //高级产品列表--分幅
     @CrossOrigin(methods = RequestMethod.GET)
     @ResponseBody
@@ -353,9 +351,7 @@ public class MetadataController
     return ResultUtil.success(themeticProductListByGeosResult);
 }
 
-
-
-    @RequestMapping(value = "/getThemeticProductListAndDeatailByIndustry")  //专题产品列表 简化按行业进行查询
+    @RequestMapping(value = "/getThemeticProductListByIndustry")  //专题产品列表 简化按行业进行查询
     @CrossOrigin()
     @ResponseBody
     public Result getThemeticProductListByGeos(@RequestParam(value = "client_name", required = true) String clientname,
@@ -372,7 +368,6 @@ public class MetadataController
         //System.out.println(jsonObject.getString("industry"));
         if(industry ==0)
         {
-
             queryIndustryList =null;
         }
         else

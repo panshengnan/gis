@@ -7,7 +7,6 @@ public class SinglePeriodThemeticProductDetail {
 
     private String singlePeriodProductId;
 
-
     private String imageGeo;
 
     private String producer;
@@ -25,6 +24,16 @@ public class SinglePeriodThemeticProductDetail {
     private String thumbnailUrl;
 
     private String legendUrl;
+
+    private String isShp;
+
+    public String getIsShp() {
+        return isShp;
+    }
+
+    public void setIsShp(String isShp) {
+        this.isShp = isShp;
+    }
 
     public String getLegendUrl() {
         return legendUrl;
