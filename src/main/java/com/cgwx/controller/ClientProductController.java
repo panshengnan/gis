@@ -2,11 +2,7 @@ package com.cgwx.controller;
 
 import com.cgwx.aop.result.Result;
 import com.cgwx.aop.result.ResultUtil;
-import com.cgwx.data.dto.ClientFileByType;
-import com.cgwx.data.dto.ClientFileInfo;
-import com.cgwx.data.dto.FolderItems;
-import com.cgwx.data.dto.folderDto;
-import com.cgwx.data.entity.GisClientFile;
+import com.cgwx.data.dto.*;
 import com.cgwx.service.IClientProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,15 +25,17 @@ public class ClientProductController {
                                         @RequestParam(value = "style", required = true) int style) {
         switch (style){
             case 1 :
-                folderDto folderDto = new folderDto();
-                folderDto.setItemsTree(iClientProductService.buildFolderTree(clientId));
-                return ResultUtil.success(folderDto);
+                folderDto folderDto1 = new folderDto();
+                folderDto1.setItemsTree(iClientProductService.buildFolderTree(clientId));
+                return ResultUtil.success(folderDto1);
             case 2 :
-                List<ClientFileByType> clientFileByTypeList = new ArrayList<>();
-                clientFileByTypeList =iClientProductService.getClientFileByType(clientId);
-                return ResultUtil.success(clientFileByTypeList);
+                folderDto folderDto2 = new folderDto();
+                folderDto2.setItemsTree(iClientProductService.getClientFileByType(clientId));
+                return ResultUtil.success(folderDto2);
             case 3 :
-
+                folderDto folderDto3 = new folderDto();
+                folderDto3.setItemsTree(iClientProductService.getClientFileByClass(clientId));
+                return ResultUtil.success(folderDto3);
             default :
                 return ResultUtil.success("获取用户产品列表失败");
         }
@@ -65,15 +63,10 @@ public class ClientProductController {
     @RequestMapping(value = "/AddFolder")  //客户产品列表 int folderId,String folderName,int parentId,int clientId
     @CrossOrigin(methods = RequestMethod.GET)
     @ResponseBody
-    public Result AddFolder(@RequestParam(value = "folderId", required = true) int folderId,
-                           @RequestParam(value = "folderName", required = true) String folderName,
+    public Result AddFolder(@RequestParam(value = "folderName", required = true) String folderName,
                            @RequestParam(value = "parentId", required = true) int parentId,
                           @RequestParam(value = "clientId", required = true)int clientId) { //int sourceId,int descId,int clientId
-
-//        List<FolderItems> item = iClientProductService.buildFolderTree(clientId);
-//        folderDto folderDto = new folderDto();
-//        folderDto.setItemsTree(item);
-        if(iClientProductService.addFolder(folderId,folderName,parentId,clientId)){
+        if(iClientProductService.addFolder(folderName,parentId,clientId)){
             System.out.println("新建文件夹成功" );
             List<FolderItems> item = iClientProductService.buildFolderTree(clientId);
             folderDto folderDto = new folderDto();
@@ -88,10 +81,6 @@ public class ClientProductController {
     @ResponseBody
     public Result DeleteFolder(@RequestParam(value = "folderId", required = true) int folderId,
                           @RequestParam(value = "clientId", required = true)int clientId) { //int sourceId,int descId,int clientId
-
-//        List<FolderItems> item = iClientProductService.buildFolderTree(clientId);
-//        folderDto folderDto = new folderDto();
-//        folderDto.setItemsTree(item);
         if(iClientProductService.deleteFolder(folderId,clientId)){
             System.out.println("删除文件夹成功" );
             List<FolderItems> item = iClientProductService.buildFolderTree(clientId);
@@ -109,9 +98,6 @@ public class ClientProductController {
                           @RequestParam(value = "newName", required = true)String newName,
                              @RequestParam(value = "clientId", required = true)int clientId) { //int sourceId,int descId,int clientId
 
-//        List<FolderItems> item = iClientProductService.buildFolderTree(clientId);
-//        folderDto folderDto = new folderDto();
-//        folderDto.setItemsTree(item);
         if(iClientProductService.RenameFolder(folderId,newName,clientId)){
             System.out.println("修改文件夹名称成功" );
             List<FolderItems> item = iClientProductService.buildFolderTree(clientId);
@@ -129,9 +115,6 @@ public class ClientProductController {
                              @RequestParam(value = "descId", required = true)int descId,
                              @RequestParam(value = "clientId", required = true)int clientId) { //int sourceId,int descId,int clientId
 
-//        List<FolderItems> item = iClientProductService.buildFolderTree(clientId);
-//        folderDto folderDto = new folderDto();
-//        folderDto.setItemsTree(item);
         if(iClientProductService.moveFlie(productId,descId,clientId)){
             System.out.println("移动文件成功" );
             List<FolderItems> item = iClientProductService.buildFolderTree(clientId);
@@ -160,7 +143,6 @@ public class ClientProductController {
         folderDto folderDto = new folderDto();
         folderDto.setItemsTree(item);
         return ResultUtil.success(folderDto);
-//        return ResultUtil.success("");
     }
     @RequestMapping(value = "/testTree")  //客户产品列表
     @CrossOrigin(methods = RequestMethod.GET)

@@ -1,7 +1,6 @@
 package com.cgwx.data.dto;
 
 import com.alibaba.fastjson.JSON;
-import com.cgwx.data.entity.GisClientFile;
 
 import java.util.List;
 

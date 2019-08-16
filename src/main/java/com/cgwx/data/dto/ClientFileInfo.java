@@ -1,10 +1,10 @@
 package com.cgwx.data.dto;
 
 public class ClientFileInfo {
-    private int productId;
+    private int logicId;
 //    private int parentId;
     private String productName;
-    private String geoJson;
+    private Object geoJson;
     private String thumbUrl;
     private String downloadUrl;
 
@@ -16,12 +16,13 @@ public class ClientFileInfo {
 //        this.parentId = parentId;
 //    }
 
-    public int getProductId() {
-        return productId;
+
+    public int getLogicId() {
+        return logicId;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setLogicId(int logicId) {
+        this.logicId = logicId;
     }
 
     public String getProductName() {
@@ -32,11 +33,11 @@ public class ClientFileInfo {
         this.productName = productName;
     }
 
-    public String getGeoJson() {
+    public Object getGeoJson() {
         return geoJson;
     }
 
-    public void setGeoJson(String geoJson) {
+    public void setGeoJson(Object geoJson) {
         this.geoJson = geoJson;
     }
 

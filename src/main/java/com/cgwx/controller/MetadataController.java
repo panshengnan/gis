@@ -1,6 +1,5 @@
 package com.cgwx.controller;
 
-
 import com.cgwx.aop.result.Result;
 import com.cgwx.aop.result.ResultUtil;
 import com.cgwx.dao.*;
@@ -352,8 +351,6 @@ public class MetadataController
         themeticProductListByGeosResult.setProductQueryList(tmpAdvanceProductSimpleInfoList);
     return ResultUtil.success(themeticProductListByGeosResult);
 }
-
-
 
     @RequestMapping(value = "/getThemeticProductListByIndustry")  //专题产品列表 简化按行业进行查询
     @CrossOrigin()
