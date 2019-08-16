@@ -922,7 +922,7 @@ public class IProductArchiveServiceImpl implements IProductArchiveService {
         for (int i = 0; i < StoreLinkList.size(); i++) {
                 String tmp = StoreLinkList.get(i).getStoreLink();
                 String postfix = tmp.substring(0,tmp.lastIndexOf('.'));
-                if (postfix.contains(".Legend"))
+                if (postfix.contains("legend"))
                     legendPath = tmp;
         }
         return legendPath;
