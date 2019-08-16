@@ -1343,5 +1343,20 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
         }
         return true;
     }
+    @Override
+    public String getTifFilePath(String parentPath) {
 
+        String shpPath = "";
+        File file = new File(parentPath);
+        File[] tempList = file.listFiles();
+        for (int i = 0; i < tempList.length; i++) {
+            if (tempList[i].isFile()) {
+                String tmp = tempList[i].toString();
+                String postfix = tmp.substring(tmp.lastIndexOf('.') + 1);
+                if (postfix.equals("tif") || postfix.equals("TIF"))
+                    shpPath = tmp;
+            }
+        }
+        return shpPath;
+    }
 }

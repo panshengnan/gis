@@ -61,5 +61,5 @@ public interface IlayerPublishService {
     void updateThemeticProductDetailImgGeo(String productId,String singleId,String geoJson);
     String getShpLatLonBounding(String path) throws FactoryException, TransformException;
     Object publishThemeTifForArchive(JSONObject msg) throws IOException, FactoryException, TransformException;
-
+    String getTifFilePath(String parentPath);
 }
