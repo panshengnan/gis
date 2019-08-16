@@ -37,8 +37,10 @@ public class ClientProductServiceImpl implements IClientProductService {
 
             for(ClientFileInfo clientFileInfo :clientFileInfoList){
                 FolderItems folderItems1 = new FolderItems();
+
                 folderItems1.setId(clientFileInfo.getLogicId());
                 folderItems1.setName(clientFileInfo.getProductName());
+                folderItems1.setParentId(gisClientFolderList.get(i).getFolderId());
                 folderItems1.setGeoJson(clientFileInfo.getGeoJson().toString());
                 folderItems1.setDownloadUrl(clientFileInfo.getDownloadUrl());
                 folderItems1.setThumbUrl(clientFileInfo.getThumbUrl());

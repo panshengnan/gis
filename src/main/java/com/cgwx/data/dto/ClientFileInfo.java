@@ -2,19 +2,19 @@ package com.cgwx.data.dto;
 
 public class ClientFileInfo {
     private int logicId;
-//    private int parentId;
+    private int parentId;
     private String productName;
     private Object geoJson;
     private String thumbUrl;
     private String downloadUrl;
 
-//    public int getParentId() {
-//        return parentId;
-//    }
-//
-//    public void setParentId(int parentId) {
-//        this.parentId = parentId;
-//    }
+    public int getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
+    }
 
 
     public int getLogicId() {
