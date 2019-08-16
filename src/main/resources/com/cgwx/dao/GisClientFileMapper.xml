@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cgwx.dao.GisClientFileMapper" >
+  <resultMap id="BaseResultMap" type="com.cgwx.data.entity.GisClientFile" >
+    <result column="product_id" property="productId" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="folder_id" property="folderId" jdbcType="INTEGER" />
+    <result column="client_id" property="clientId" jdbcType="INTEGER" />
+    <result column="image_geo" property="imageGeo" jdbcType="OTHER" />
+    <result column="thumbUrl" property="thumburl" jdbcType="VARCHAR" />
+    <result column="downloadUrl" property="downloadurl" jdbcType="VARCHAR" />
+    <result column="product_type" property="productType" jdbcType="VARCHAR" />
+    <result column="product_class" property="productClass" jdbcType="VARCHAR" />
+    <result column="logic_id" property="logicId" jdbcType="INTEGER" />
+  </resultMap>
+  <insert id="insert" parameterType="com.cgwx.data.entity.GisClientFile" >
+    insert into gis_client_file (product_id, product_name, folder_id, 
+      client_id, image_geo, thumbUrl, 
+      downloadUrl, product_type, product_class, 
+      logic_id)
+    values (#{productId,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, #{folderId,jdbcType=INTEGER}, 
+      #{clientId,jdbcType=INTEGER}, #{imageGeo,jdbcType=OTHER}, #{thumburl,jdbcType=VARCHAR}, 
+      #{downloadurl,jdbcType=VARCHAR}, #{productType,jdbcType=VARCHAR}, #{productClass,jdbcType=VARCHAR}, 
+      #{logicId,jdbcType=INTEGER})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select product_id, product_name, folder_id, client_id, image_geo, thumbUrl, downloadUrl, 
+    product_type, product_class, logic_id
+    from gis_client_file
+  </select>
+</mapper>
