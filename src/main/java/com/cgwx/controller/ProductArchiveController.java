@@ -418,6 +418,7 @@ public class ProductArchiveController {
             String singlePath = officialPath + '\\' + jsonObjectTmp.getString("singleName");
             if (iProductArchiveService.isExistTif(singlePath)) {
                 //开始发布tif
+                System.out.println("到发布tif这了！");
                 JSONObject content = new JSONObject();
                 System.out.println("tif文件夹路径：" + officialPath + '\\' + jsonObjectTmp.getString("singleName"));
                 String tifPath = ilayerPublishService.getTifFilePath(singlePath);//ss0801
@@ -438,6 +439,7 @@ public class ProductArchiveController {
                 System.out.println("正在发布tif");
                 //开始发布tif
             } else {
+                System.out.println("到检测shp这了！！");
                 if (iProductArchiveService.isExistShp(singlePath)) {
 //                    String filepath = singlePath + "\\" + jsonObjectTmp.getString("singleName") + ".zip";
 //                    File zipFileSource = new File(filepath);
