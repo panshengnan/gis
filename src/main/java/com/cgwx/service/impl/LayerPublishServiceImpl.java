@@ -1330,7 +1330,7 @@ public class LayerPublishServiceImpl implements IlayerPublishService {
     @Override
     public Object publishThemeTifForArchive(JSONObject msg) throws IOException, FactoryException, TransformException {
 
-        JSONObject jsonObject = publishTif(msg.getString("path"), "layerPublish", "#FFFFFF");
+        JSONObject jsonObject = publishTif(msg.getString("path"), "layerPublish", "#000000");
         updateThemeticProductDetailImgGeo(msg.getString("productId"), msg.getString("singleId"), jsonObject.getString("geoJson"));
         GisProductLayerInfo gisProductLayerInfo = new GisProductLayerInfo();
         gisProductLayerInfo.setProductId(msg.getString("productId"));
