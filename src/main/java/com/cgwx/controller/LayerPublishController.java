@@ -2,6 +2,7 @@ package com.cgwx.controller;
 
 
 import com.cgwx.aop.Permission;
+import com.cgwx.aop.UserManagement;
 import com.cgwx.aop.result.Result;
 import com.cgwx.aop.result.ResultUtil;
 import com.cgwx.data.dto.AttributeInfoDto;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,16 @@ public class LayerPublishController {
 
     @Autowired
     IlayerPublishService ilayerPublishService;
+
+
+    @RequestMapping(value = "/test0819")
+    @CrossOrigin()
+    @ResponseBody
+    public Result test0819() {
+        UserManagement userManagement = new UserManagement();
+        userManagement.judgePermission();
+        return ResultUtil.success(userManagement.judgePermission());
+    }
 
     @RequestMapping(value = "/publishShpWithSld")
     @CrossOrigin()

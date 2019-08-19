@@ -8,5 +8,4 @@ public interface Constant {
     String SERVER_ADDRESS = "http://192.168.20.7:8055/";
 
 
-
 }

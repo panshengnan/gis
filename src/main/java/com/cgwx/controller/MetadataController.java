@@ -354,7 +354,7 @@ public class MetadataController
     @RequestMapping(value = "/getThemeticProductListByIndustry")  //专题产品列表 简化按行业进行查询
     @CrossOrigin()
     @ResponseBody
-    public Result getThemeticProductListByGeos(@RequestParam(value = "client_name", required = true) String clientname,
+    public Result getThemeticProductListByGeos(@RequestParam(value = "client_name", required = false) String clientname,
                                                @RequestParam(value = "industry", required = true) int industry)
     {
         String productDescription=null;
