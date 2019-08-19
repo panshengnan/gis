@@ -53,9 +53,9 @@ public interface GisProductStoreLinkInfoMapper {
     @Select({"SELECT  store_link\n                       FROM gis_product_store_link_info\n               WHERE product_id = #{productId} and file_name like '%.jpg'"})
     List<String> selectProductthumbnailUrlurl(@Param("productId") String var1);
 
-    @Select({"SELECT  store_link\n                       FROM gis_product_store_link_info\n               WHERE product_id = #{productId} and single_period_product_id = #{singlePeriodProductId} and file_name like '%.jpg'"})
-    List<String> selectProductthumbnailUrl(@Param("productId") String var1,@Param("singlePeriodProductId") String var2);
+    @Select({"SELECT  store_link\n                       FROM gis_product_store_link_info\n               WHERE product_id = #{productId} and single_period_product_id = #{singlePeriodProductId} and file_name like '%.jpg' and file_name not like  '%legend.jpg'"})
+   String selectProductthumbnailUrl(@Param("productId") String var1,@Param("singlePeriodProductId") String var2);
 
-    @Select({"SELECT  store_link\n                       FROM gis_product_store_link_info\n               WHERE product_id = #{productId} and single_period_product_id = #{singlePeriodProductId} and file_name like '%legend%'"})
-    List<String> selectProductLegendUrl(@Param("productId") String var1,@Param("singlePeriodProductId") String var2);
+    @Select({"SELECT  store_link\n                       FROM gis_product_store_link_info\n               WHERE product_id = #{productId} and single_period_product_id = #{singlePeriodProductId} and file_name like  '%legend.jpg'"})
+    String selectProductLegendUrl(@Param("productId") String var1,@Param("singlePeriodProductId") String var2);
 }

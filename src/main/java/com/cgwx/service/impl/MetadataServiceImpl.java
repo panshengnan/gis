@@ -184,6 +184,7 @@ public class MetadataServiceImpl implements IMetadataService {
            list.get(count).setIsShp(pdmProductLayerInfoMapper.getIsShp(productId,singlePeriodProductIdList.get(count)));
 
            //ss0813 测试数据 后续删除
+            System.out.println(pdmProductStoreLinkInfoMapper.selectProductthumbnailUrl(productId,singlePeriodProductIdList.get(count)));
            list.get(count).setThumbnailUrl(productStoreLinkHead+pdmProductStoreLinkInfoMapper.selectProductthumbnailUrl(productId,singlePeriodProductIdList.get(count)));//productStoreLinkHead+pdmProductStoreLinkInfoMapper.selectProductthumbnailUrl(productId)
             list.get(count).setLegendUrl(productStoreLinkHead+pdmProductStoreLinkInfoMapper.selectProductLegendUrl(productId,singlePeriodProductIdList.get(count)));
 

@@ -413,13 +413,7 @@ public class ProductArchiveController {
             pdmThemeticProductDetailInfo.setSinglePeriodProductId(jsonObjectTmp.getString("singleTempId"));
             pdmThemeticProductDetailInfo.setSinglePeriodProductName(jsonObjectTmp.getString("singleName"));
             iProductArchiveService.updateThemeticProductDetail(pdmThemeticProductDetailInfo);
-            //移到上边
-            GisThemeticProductInfo pdmThemeticProductInfo = new GisThemeticProductInfo();
-            pdmThemeticProductInfo.setProductId(productId);
-            pdmThemeticProductInfo.setParentDirectory(officialPath);
-            pdmThemeticProductInfo.setThemeticProductName(productName);
-            iProductArchiveService.updateThemeticProduct(pdmThemeticProductInfo);
-            iProductDownloadService.generateProductLink(1, productId, productName);
+
             //下面这段是新加的
             String singlePath = officialPath + '\\' + jsonObjectTmp.getString("singleName");
             if (iProductArchiveService.isExistTif(singlePath)) {
@@ -430,9 +424,9 @@ public class ProductArchiveController {
                 content.put("path", tifPath);//注意以后改了
 //                System.out.println("tif路径是：" + content.getString("path"));
 //                //////////////////////////
-//                if (!iProductArchiveService.isExistJpg(singlePath)) {
-//                    iProductArchiveService.ZoomImg(iProductArchiveService.changeTiftoJpg(tifPath));
-//                }
+                if (!iProductArchiveService.isExistJpg(singlePath)) {
+                    iProductArchiveService.ZoomImg(iProductArchiveService.changeTiftoJpg(tifPath));
+                }
                 //////////////////////////
                 content.put("productId", productId);
                 content.put("singleId", jsonObjectTmp.getString("singleTempId"));
@@ -468,7 +462,12 @@ public class ProductArchiveController {
             }
         }
         //上面这段是新加的
-
+        GisThemeticProductInfo pdmThemeticProductInfo = new GisThemeticProductInfo();
+        pdmThemeticProductInfo.setProductId(productId);
+        pdmThemeticProductInfo.setParentDirectory(officialPath);
+        pdmThemeticProductInfo.setThemeticProductName(productName);
+        iProductArchiveService.updateThemeticProduct(pdmThemeticProductInfo);
+        iProductDownloadService.generateProductLink(1, productId, productName);
         //操作一波归档记录表
         GisArchiveRecordsInfo pdmArchiveRecordsInfo = new GisArchiveRecordsInfo();
         pdmArchiveRecordsInfo.setArchiveResult(1);

@@ -894,7 +894,7 @@ public class IProductArchiveServiceImpl implements IProductArchiveService {
             if (tempList[i].isFile()) {
                 String tmp = tempList[i].toString();
                 String postfix = tmp.substring(tmp.lastIndexOf('.') + 1);
-                if (postfix.equals("jpg") || postfix.equals("JPG"))
+                if (postfix.equals("jpg") || postfix.equals("JPG") && !tmp.contains("legend"))
                     return true;
             }
         }
