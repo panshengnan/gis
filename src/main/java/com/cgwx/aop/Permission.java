@@ -16,4 +16,5 @@ public @interface Permission {
     //控制业务系统权限
     //注意事项：使用此注解开发controller时请将返回类型设置成object，以免出现问题
 
+
 }
