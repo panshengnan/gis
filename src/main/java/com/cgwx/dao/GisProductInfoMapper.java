@@ -316,4 +316,10 @@ public interface GisProductInfoMapper {
                                                                 @Param("where")String where,
                                                                 @Param("image_geo")Object image_geo,
                                                                 @Param("producer")String producer);
+    @Select({"SELECT produce_type\n" +
+            " FROM gis_product_info\n" +
+            "WHERE produce_id = #{productId} "
+    })
+    int getProductType(@Param("productId")String productId);
+
 }

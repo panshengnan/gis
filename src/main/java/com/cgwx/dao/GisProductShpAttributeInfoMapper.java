@@ -79,4 +79,12 @@ public interface GisProductShpAttributeInfoMapper {
             "</script>"
     })
     void updateValueCount(@Param("productId")String productId, @Param("singleId")String singleId, @Param("attributeName")String attributeName,@Param("valueNum")int valueNum);
+
+    @Select({"<script>" +
+            "SELECT attribute_name\n  " +
+            "  FROM gis_product_shp_attribute_info\n  " +
+            "    WHERE id = #{id}  " +
+            "</script>"
+    })
+    String getAttributeName(@Param("id")int id);
 }

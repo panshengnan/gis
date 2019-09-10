@@ -15,6 +15,8 @@ public class GisProductShpAttributeDetailInfo {
 
     private String otherValue;
 
+    private Integer dataId;
+
     public Integer getAttributeId() {
         return attributeId;
     }
@@ -69,5 +71,13 @@ public class GisProductShpAttributeDetailInfo {
 
     public void setOtherValue(String otherValue) {
         this.otherValue = otherValue == null ? null : otherValue.trim();
+    }
+
+    public Integer getDataId() {
+        return dataId;
+    }
+
+    public void setDataId(Integer dataId) {
+        this.dataId = dataId;
     }
 }
