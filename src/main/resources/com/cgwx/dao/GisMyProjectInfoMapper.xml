@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cgwx.dao.GisMyProjectInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.cgwx.data.entity.GisMyProjectInfo" >
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="flag_geo" property="flagGeo" jdbcType="OTHER" />
+    <result column="flag_geo_trend" property="flagGeoTrend" jdbcType="OTHER" />
+    <result column="jpg" property="jpg" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.cgwx.data.entity.GisMyProjectInfo" >
+    insert into gis_my_project_info (project_name, status, flag_geo, 
+      flag_geo_trend, jpg, user_id
+      )
+    values (#{projectName,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{flagGeo,jdbcType=OTHER}, 
+      #{flagGeoTrend,jdbcType=OTHER}, #{jpg,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select project_name, status, flag_geo, flag_geo_trend, jpg, user_id
+    from gis_my_project_info
+  </select>
+</mapper>
