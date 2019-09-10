@@ -6,7 +6,9 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -33,7 +35,7 @@ public class AuthenticationImpl {
         try {
             HttpClient httpClient = new HttpClient();
             httpClient.getParams().setContentCharset("UTF-8");
-            PostMethod postMethod = new PostMethod(SERVER_ADDRESS+"judgePermission");
+            PostMethod postMethod = new PostMethod(SERVER_ADDRESS + "autoJudgePermission");
             RequestEntity requestEntity = new StringRequestEntity("", "application/xml", "UTF-8");
             postMethod.setRequestEntity(requestEntity);
             postMethod.setParameter("url", url);
@@ -49,13 +51,13 @@ public class AuthenticationImpl {
         } catch (Exception var10) {
             resultJson = "请求用户管理服务出错";
         }
-        System.out.println(resultJson);
         if (resultJson.equals("请求用户管理服务出错"))
-            return "请求用户管理服务出错!";
-        if (resultJson.equals("未登录"))
+            return "UserManagementServiceDown";
+        if (resultJson.equals("未登录")||resultJson.equals("\"未登录\""))
             return "NotLoggedIn";
-        if (resultJson.equals("false"))
+        if (resultJson.equals("\"false\"")||resultJson.equals("false")) {
             return "NoPermission";
+        }
         try {
             joinPoint.proceed();
         } catch (Exception e) {

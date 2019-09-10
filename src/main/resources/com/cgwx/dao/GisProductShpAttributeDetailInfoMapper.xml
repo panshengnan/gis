@@ -9,18 +9,19 @@
     <result column="stroke_color" property="strokeColor" jdbcType="VARCHAR" />
     <result column="stroke_opacity" property="strokeOpacity" jdbcType="VARCHAR" />
     <result column="other_value" property="otherValue" jdbcType="VARCHAR" />
+    <result column="data_id" property="dataId" jdbcType="INTEGER" />
   </resultMap>
   <insert id="insert" parameterType="com.cgwx.data.entity.GisProductShpAttributeDetailInfo" >
     insert into gis_product_shp_attribute_detail_info (attribute_id, attribute_value, fill_color, 
       fill_opacity, stroke_color, stroke_opacity, 
-      other_value)
+      other_value, data_id)
     values (#{attributeId,jdbcType=INTEGER}, #{attributeValue,jdbcType=VARCHAR}, #{fillColor,jdbcType=VARCHAR}, 
       #{fillOpacity,jdbcType=VARCHAR}, #{strokeColor,jdbcType=VARCHAR}, #{strokeOpacity,jdbcType=VARCHAR}, 
-      #{otherValue,jdbcType=VARCHAR})
+      #{otherValue,jdbcType=VARCHAR}, #{dataId,jdbcType=INTEGER})
   </insert>
   <select id="selectAll" resultMap="BaseResultMap" >
     select attribute_id, attribute_value, fill_color, fill_opacity, stroke_color, stroke_opacity, 
-    other_value
+    other_value, data_id
     from gis_product_shp_attribute_detail_info
   </select>
 </mapper>
