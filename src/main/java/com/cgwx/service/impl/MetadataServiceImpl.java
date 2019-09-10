@@ -1,5 +1,6 @@
 package com.cgwx.service.impl;
 
+import com.cgwx.aop.result.ResultUtil;
 import com.cgwx.dao.*;
 import com.cgwx.data.dto.*;
 import com.cgwx.data.entity.*;
@@ -445,8 +446,6 @@ public class MetadataServiceImpl implements IMetadataService {
 
             }
 
-
-
         PageInfo<ProductQueryList> pageInfo = new PageInfo<>(list);
 
         ProductQueryListResult productQueryListResult = new ProductQueryListResult();
@@ -753,7 +752,6 @@ public class MetadataServiceImpl implements IMetadataService {
     public List<AdvanceProductSimpleInfo> getAdvanceProductSimpleInfoList(AdvanceProductCri advanceProductCri)
     {
 
-
         List<AdvanceProductSimpleInfo> advanceProductSimpleInfoList=new ArrayList<AdvanceProductSimpleInfo>();
         List<AdvanceProductSimpleInfo> advanceProductSimpleInfoListtemp1=new ArrayList<AdvanceProductSimpleInfo>();
         List<AdvanceProductSimpleInfo> advanceProductSimpleInfoListtemp2=new ArrayList<AdvanceProductSimpleInfo>();
@@ -904,6 +902,60 @@ public class MetadataServiceImpl implements IMetadataService {
     {
         List<String> produceAreaList=pdmProductInfoMapper.getProduceAreaList();
         return  produceAreaList;
+    }
+    @Override
+    public List<ExampleData> getExampleDataList( List<String> productIdList){
+
+        List<ExampleData> exampleDataList = new ArrayList<>();
+        System.out.println(productIdList);
+        if(productIdList!=null)
+        {
+            for(int i=0;i<productIdList.size();i++)
+            {
+                int productType= pdmProductInfoMapper.selectProductTypeByProductId(productIdList.get(i));
+                System.out.print(productType);
+                String  TypeName = pdmProductTypeInfoMapper.selectProductTypeDescriptionByProductType(productType);
+                ExampleData exampleDatatemp = new ExampleData();
+                exampleDatatemp.setProductId(productIdList.get(i));
+                switch (TypeName){
+                    case "正射产品":
+                        OrthoProductDetail orthoProductDetail = getOrthoProductDetail(productIdList.get(i));
+                        exampleDatatemp.setProductName(orthoProductDetail.getProductName());
+                        exampleDatatemp.setThumbnailUrl(orthoProductDetail.getThumbnailUrl());
+
+                    case "镶嵌产品":
+                        InlayProductDetail inlayProductDetail = getInlayProductDetail(productIdList.get(i));
+                        exampleDatatemp.setProductName(inlayProductDetail.getProductName());
+                        exampleDatatemp.setThumbnailUrl(inlayProductDetail.getThumbnailUrl());
+                    case "分幅产品":
+                        SubdivisionProductDetail subdivisionProductDetail = getSubdivisionProductDetail(productIdList.get(i));
+                        exampleDatatemp.setProductName(subdivisionProductDetail.getProductName());
+                        exampleDatatemp.setThumbnailUrl(subdivisionProductDetail.getThumbnailUrl());
+                    case "专题产品":
+                        List<String> singlePeriodProductIdList=pdmThemeticProductDetailInfoMapper.selecSinglePeriodThemeticProductList(productIdList.get(i));
+                        ThemeticProductDetail multiPeriodThemeticProductDetail = getThemeticProductDetail(productIdList.get(i),singlePeriodProductIdList);
+                        exampleDatatemp.setProductName(multiPeriodThemeticProductDetail.getThemeticProductName());
+                        exampleDatatemp.setCountOfPeriods(multiPeriodThemeticProductDetail.getCountOfPeriods());
+                        List<ExampleSingleData> exampleSingleDataList = new ArrayList<>();
+                        List<SinglePeriodThemeticProductDetail> singlePeriodThemeticProductDetail = multiPeriodThemeticProductDetail.getSinglePeriodThemeticProductDetail();
+                        for (int j=0;j<singlePeriodThemeticProductDetail.size();j++){
+                            ExampleSingleData exampleSingleData = new ExampleSingleData();
+                            exampleSingleData.setSingleId(singlePeriodThemeticProductDetail.get(j).getSinglePeriodProductId());
+                            exampleSingleData.setSinglePeriodProductName(singlePeriodThemeticProductDetail.get(j).getSinglePeriodProductName());
+                            exampleSingleData.setThumbnailUrl(singlePeriodThemeticProductDetail.get(j).getThumbnailUrl());
+                            exampleSingleDataList.add(exampleSingleData);
+                        }
+                        exampleDatatemp.setExampleSingleDataList(exampleSingleDataList);
+                    default :
+                }
+                exampleDataList.add(exampleDatatemp);
+
+            }
+        }
+        else {
+            return null;
+        }
+        return  exampleDataList;
     }
 }
 

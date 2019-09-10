@@ -7,6 +7,15 @@ public class ClientFileInfo {
     private Object geoJson;
     private String thumbUrl;
     private String downloadUrl;
+    private String layerName;
+
+    public String getLayerName() {
+        return layerName;
+    }
+
+    public void setLayerName(String layerName) {
+        this.layerName = layerName;
+    }
 
     public int getParentId() {
         return parentId;

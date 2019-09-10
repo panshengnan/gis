@@ -273,7 +273,11 @@ public interface GisProductInfoMapper {
     })
     List<String> getProduceAreaList();
 
-
+    @Select({"SELECT product_id\n" +
+            " FROM gis_product_info\n" +
+            "WHERE product_name LIKE CONCAT('%' ,#{description} ,'%')"
+    })
+    List<String> getProductIdList(@Param("description")String description);
 
     @Select("<script>"
             +"SELECT product_id,product_name \n"+

@@ -24,7 +24,6 @@ import java.util.List;
 @Controller
 public class MetadataController
 {
-
     @Autowired
     IMetadataService metadataService;
     @Autowired
@@ -39,11 +38,59 @@ public class MetadataController
     GisThemeticProductDetailIndustryInfoMapper pdmThemeticProductDetailIndustryInfoMapper;
     @Autowired
     GisProductStoreLinkInfoMapper pdmProductStoreLinkInfoMapper;
+    @Autowired
+    GisStandardProductInfoMapper gisStandardProductInfoMapper;
 
     @Value("${productStoreLinkHead}")
     private String productStoreLinkHead;//拼链接
 
+    @RequestMapping(value = "/getExampleData")  //创建项目 获取样例数据列表
+    @CrossOrigin()
+    @ResponseBody
+    public Result getExampleData(@RequestParam(value = "description", required = true) String description)
+    {
+        List<String> productIdList= new ArrayList<>();
+        productIdList=pdmProductInfoMapper.getProductIdList(description);
+        List<ExampleData> exampleDataList = metadataService.getExampleDataList(productIdList);
+        return ResultUtil.success(exampleDataList);
+    }
+    @RequestMapping(value = "/getExampleDataDetail")  //创建项目 获取样例数据详情
+    @CrossOrigin()
+    @ResponseBody
+    public Result getExampleDataDetail(@RequestParam(value = "productId", required = true) String productId) {
+        int productType = pdmProductInfoMapper.selectProductTypeByProductId(productId);
+        System.out.print(productType);
+        String TypeName = pdmProductTypeInfoMapper.selectProductTypeDescriptionByProductType(productType);
+        switch (TypeName) {
+            case "正射产品":
+                OrthoProductDetail orthoProductDetail = metadataService.getOrthoProductDetail(productId);
+                return ResultUtil.success(orthoProductDetail);
+            case "镶嵌产品":
+                InlayProductDetail inlayProductDetail = metadataService.getInlayProductDetail(productId);
+                return ResultUtil.success(inlayProductDetail);
+            case "分幅产品":
+                SubdivisionProductDetail subdivisionProductDetail = metadataService.getSubdivisionProductDetail(productId);
+                return ResultUtil.success(subdivisionProductDetail);
+            case "专题产品":
+                List<String> singlePeriodProductIdList = pdmThemeticProductDetailInfoMapper.selecSinglePeriodThemeticProductList(productId);
+                ThemeticProductDetail multiPeriodThemeticProductDetail = metadataService.getThemeticProductDetail(productId, singlePeriodProductIdList);
+                return ResultUtil.success(multiPeriodThemeticProductDetail);
+            case "标准产品":
 
+            default:
+                return ResultUtil.success("当前产品Id无效");
+        }
+    }
+    @RequestMapping(value = "/standardProductDetail")  //标准产品详情
+    @CrossOrigin(methods = RequestMethod.GET)
+    @ResponseBody
+    public Result StandardProductDetail(@RequestParam(value = "productId", required = true) String productId) {
+
+        List<String> singlePeriodProductIdList=pdmThemeticProductDetailInfoMapper.selecSinglePeriodThemeticProductList(productId);
+        // System.err.println(singlePeriodProductIdList);
+        ThemeticProductDetail multiPeriodThemeticProductDetail = metadataService.getThemeticProductDetail(productId,singlePeriodProductIdList);
+        return ResultUtil.success(multiPeriodThemeticProductDetail);
+    }
     @RequestMapping(value = "/themeticProductDetail")  //专题产品详情
     @CrossOrigin(methods = RequestMethod.GET)
     @ResponseBody
@@ -518,7 +565,6 @@ public class MetadataController
 
         return ResultUtil.success(advanceProductSimpleInfoResult);
     }
-
 
     @RequestMapping(value = "/clientlist")  //产品列表
     @CrossOrigin(methods = RequestMethod.GET)

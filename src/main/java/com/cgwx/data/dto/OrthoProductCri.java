@@ -64,7 +64,6 @@ public class OrthoProductCri {
     }
 
 
-
     public String getOrderby() {
         return orderby;
     }
@@ -130,9 +129,6 @@ public class OrthoProductCri {
     public void setDelieverName(String delieverName) {
         this.delieverName = delieverName == null ? null : delieverName.trim();
     }
-
-
-
 
 
 }

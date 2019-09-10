@@ -5,27 +5,28 @@
     <result column="product_id" property="productId" jdbcType="VARCHAR" />
     <result column="product_name" property="productName" jdbcType="VARCHAR" />
     <result column="folder_id" property="folderId" jdbcType="INTEGER" />
-    <result column="client_id" property="clientId" jdbcType="INTEGER" />
+    <result column="client_id" property="clientId" jdbcType="BIGINT" />
     <result column="image_geo" property="imageGeo" jdbcType="OTHER" />
-    <result column="thumbUrl" property="thumburl" jdbcType="VARCHAR" />
-    <result column="downloadUrl" property="downloadurl" jdbcType="VARCHAR" />
+    <result column="thumb_url" property="thumbUrl" jdbcType="VARCHAR" />
+    <result column="download_url" property="downloadUrl" jdbcType="VARCHAR" />
     <result column="product_type" property="productType" jdbcType="VARCHAR" />
     <result column="product_class" property="productClass" jdbcType="VARCHAR" />
     <result column="logic_id" property="logicId" jdbcType="INTEGER" />
+    <result column="layer_name" property="layerName" jdbcType="VARCHAR" />
   </resultMap>
   <insert id="insert" parameterType="com.cgwx.data.entity.GisClientFile" >
     insert into gis_client_file (product_id, product_name, folder_id, 
-      client_id, image_geo, thumbUrl, 
-      downloadUrl, product_type, product_class, 
-      logic_id)
+      client_id, image_geo, thumb_url, 
+      download_url, product_type, product_class, 
+      logic_id, layer_name)
     values (#{productId,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, #{folderId,jdbcType=INTEGER}, 
-      #{clientId,jdbcType=INTEGER}, #{imageGeo,jdbcType=OTHER}, #{thumburl,jdbcType=VARCHAR}, 
-      #{downloadurl,jdbcType=VARCHAR}, #{productType,jdbcType=VARCHAR}, #{productClass,jdbcType=VARCHAR}, 
-      #{logicId,jdbcType=INTEGER})
+      #{clientId,jdbcType=BIGINT}, #{imageGeo,jdbcType=OTHER}, #{thumbUrl,jdbcType=VARCHAR}, 
+      #{downloadUrl,jdbcType=VARCHAR}, #{productType,jdbcType=VARCHAR}, #{productClass,jdbcType=VARCHAR}, 
+      #{logicId,jdbcType=INTEGER}, #{layerName,jdbcType=VARCHAR})
   </insert>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select product_id, product_name, folder_id, client_id, image_geo, thumbUrl, downloadUrl, 
-    product_type, product_class, logic_id
+    select product_id, product_name, folder_id, client_id, image_geo, thumb_url, download_url, 
+    product_type, product_class, logic_id, layer_name
     from gis_client_file
   </select>
 </mapper>

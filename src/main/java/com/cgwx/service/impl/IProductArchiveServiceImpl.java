@@ -108,6 +108,9 @@ public class IProductArchiveServiceImpl implements IProductArchiveService {
     @Autowired
     GisProductStoreLinkInfoMapper gisProductStoreLinkInfoMapper;
 
+    @Autowired
+     GisStandardProductInfoMapper gisStandardProductInfoMapper;
+
     StreamDecoder sd;
 
     @Override/*上传文件*/
@@ -1038,5 +1041,10 @@ public class IProductArchiveServiceImpl implements IProductArchiveService {
             data+='&';
         return data;
 
+    }
+    @Override
+    public int updateStandardProduct(GisStandardProductInfo gisStandardProductInfo) {
+
+        return gisStandardProductInfoMapper.insert(gisStandardProductInfo);
     }
 }

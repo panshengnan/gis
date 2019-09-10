@@ -9,7 +9,7 @@ public class ThemeticProductDetail {
 
     private String themeticProductName;
 
-    private  List<Industry> industry;
+    private List<Industry> industry;
 
 //    private String parentDirectory;
 
@@ -23,7 +23,7 @@ public class ThemeticProductDetail {
         return industry;
     }
 
-    private  String productDescription;
+    private String productDescription;
 
     private String clientName;
 
@@ -87,17 +87,22 @@ public class ThemeticProductDetail {
         this.countOfPeriods = countOfPeriods;
     }
 
-    public List<SinglePeriodThemeticProductDetail> getSinglePeriodThemeticProductDetail(){
+    public List<SinglePeriodThemeticProductDetail> getSinglePeriodThemeticProductDetail() {
         return singlePeriodThemeticProductDetail;
     }
-    public void setSinglePeriodThemeticProductDetail(List<SinglePeriodThemeticProductDetail> singlePeriodThemeticProductDetail){
-        this.singlePeriodThemeticProductDetail=singlePeriodThemeticProductDetail;
+
+    public void setSinglePeriodThemeticProductDetail(List<SinglePeriodThemeticProductDetail> singlePeriodThemeticProductDetail) {
+        this.singlePeriodThemeticProductDetail = singlePeriodThemeticProductDetail;
     }
 
-    public String getProductDescription(){return productDescription;}
+    public String getProductDescription() {
+        return productDescription;
+    }
+
     public void setProductDescription(String productDescription) {
         this.productDescription = productDescription == null ? null : productDescription.trim();
     }
+
     public String getClientName() {
         return clientName;
     }

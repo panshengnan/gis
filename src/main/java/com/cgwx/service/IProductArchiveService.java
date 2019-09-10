@@ -71,4 +71,6 @@ public interface IProductArchiveService {
     String getSldName(String path);
     //获取图例url
     String getLegendUrl(String productId);
+    int updateStandardProduct(GisStandardProductInfo gisStandardProductInfo);
+
 }

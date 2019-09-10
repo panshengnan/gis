@@ -14,6 +14,14 @@ public class FolderItems {
     private String geoJson;
     private String thumbUrl;
     private String downloadUrl;
+    private String layerName;
+    public String getLayerName() {
+        return layerName;
+    }
+
+    public void setLayerName(String layerName) {
+        this.layerName = layerName;
+    }
 
     public String getGeoJson() {
         return geoJson;

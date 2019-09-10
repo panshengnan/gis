@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cgwx.dao.GisStandardProductInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.cgwx.data.entity.GisStandardProductInfo" >
+    <result column="product_id" property="productId" jdbcType="VARCHAR" />
+    <result column="satellite_id" property="satelliteId" jdbcType="VARCHAR" />
+    <result column="sensor" property="sensor" jdbcType="VARCHAR" />
+    <result column="imaging_time_str" property="imagingTimeStr" jdbcType="VARCHAR" />
+    <result column="image_gsd" property="imageGsd" jdbcType="NUMERIC" />
+    <result column="cloud_percent" property="cloudPercent" jdbcType="NUMERIC" />
+    <result column="product_quality" property="productQuality" jdbcType="VARCHAR" />
+    <result column="image_geo" property="imageGeo" jdbcType="OTHER" />
+    <result column="band_amount" property="bandAmount" jdbcType="INTEGER" />
+    <result column="band_string" property="bandString" jdbcType="VARCHAR" />
+    <result column="thumbnail" property="thumbnail" jdbcType="VARCHAR" />
+    <result column="product_type" property="productType" jdbcType="INTEGER" />
+    <result column="product_band" property="productBand" jdbcType="VARCHAR" />
+    <result column="roll_satellite_angle" property="rollSatelliteAngle" jdbcType="NUMERIC" />
+    <result column="solar_elevation" property="solarElevation" jdbcType="REAL" />
+    <result column="center_latitude" property="centerLatitude" jdbcType="REAL" />
+    <result column="center_longitude" property="centerLongitude" jdbcType="REAL" />
+  </resultMap>
+  <insert id="insert" parameterType="com.cgwx.data.entity.GisStandardProductInfo" >
+    insert into gis_standard_product_info (product_id, satellite_id, sensor, 
+      imaging_time_str, image_gsd, cloud_percent, 
+      product_quality, image_geo, band_amount, 
+      band_string, thumbnail, product_type, 
+      product_band, roll_satellite_angle, solar_elevation, 
+      center_latitude, center_longitude)
+    values (#{productId,jdbcType=VARCHAR}, #{satelliteId,jdbcType=VARCHAR}, #{sensor,jdbcType=VARCHAR}, 
+      #{imagingTimeStr,jdbcType=VARCHAR}, #{imageGsd,jdbcType=NUMERIC}, #{cloudPercent,jdbcType=NUMERIC}, 
+      #{productQuality,jdbcType=VARCHAR}, #{imageGeo,jdbcType=OTHER}, #{bandAmount,jdbcType=INTEGER}, 
+      #{bandString,jdbcType=VARCHAR}, #{thumbnail,jdbcType=VARCHAR}, #{productType,jdbcType=INTEGER}, 
+      #{productBand,jdbcType=VARCHAR}, #{rollSatelliteAngle,jdbcType=NUMERIC}, #{solarElevation,jdbcType=REAL}, 
+      #{centerLatitude,jdbcType=REAL}, #{centerLongitude,jdbcType=REAL})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select product_id, satellite_id, sensor, imaging_time_str, image_gsd, cloud_percent, 
+    product_quality, image_geo, band_amount, band_string, thumbnail, product_type, product_band, 
+    roll_satellite_angle, solar_elevation, center_latitude, center_longitude
+    from gis_standard_product_info
+  </select>
+</mapper>

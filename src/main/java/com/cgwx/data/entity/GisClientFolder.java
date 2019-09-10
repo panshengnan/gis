@@ -7,7 +7,7 @@ public class GisClientFolder {
 
     private String folderName;
 
-    private Integer clientId;
+    private Long clientId;
 
     public Integer getFolderId() {
         return folderId;
@@ -33,11 +33,11 @@ public class GisClientFolder {
         this.folderName = folderName == null ? null : folderName.trim();
     }
 
-    public Integer getClientId() {
+    public Long getClientId() {
         return clientId;
     }
 
-    public void setClientId(Integer clientId) {
+    public void setClientId(Long clientId) {
         this.clientId = clientId;
     }
 }

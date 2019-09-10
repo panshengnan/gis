@@ -6,11 +6,13 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+
 @Mapper
 public interface GisProductTypeInfoMapper {
     int insert(GisProductTypeInfo record);
 
     List<GisProductTypeInfo> selectAll();
+
     @Select({"SELECT product_description\n" +
             " FROM gis_product_type_info\n" +
             "WHERE product_type = #{productType}"

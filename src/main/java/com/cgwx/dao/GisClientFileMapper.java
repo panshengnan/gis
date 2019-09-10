@@ -11,6 +11,16 @@ public interface GisClientFileMapper {
 
     List<ClientFileInfo> selectAll();
 
+    @Select({"SELECT product_id\n" +
+            " FROM gis_Client_file\n" +
+            "WHERE client_id = #{clientId} and  folder_id = #{folderId}"
+    })
+    @Results({@Result(
+            column = "logic_id",
+            property = "logicId"
+    )})
+    String getProductIdbylogicid(@Param("clientId") long clientId,@Param("logicId") int logicId);
+
     @Select({"SELECT logic_id,product_name,st_asgeojson(image_geo) as geo,thumb_url,download_url\n" +
             " FROM gis_Client_file\n" +
             "WHERE client_id = #{clientId} and  folder_id = #{folderId}"
@@ -30,8 +40,11 @@ public interface GisClientFileMapper {
     ),@Result(
             column = "download_url",
             property = "downloadUrl"
+    ), @Result(
+            column = "layer_name",
+            property = "layerName"
     )})
-    List<ClientFileInfo> getProductListByFolderId(@Param("clientId") int clientId,@Param("folderId") int folderId);
+    List<ClientFileInfo> getProductListByFolderId(@Param("clientId") long clientId,@Param("folderId") int folderId);
 
     @Select({"SELECT logic_id,product_name,st_asgeojson(image_geo) as geo,thumb_url,download_url\n" +
             " FROM gis_Client_file\n" +
@@ -52,8 +65,11 @@ public interface GisClientFileMapper {
     ),@Result(
             column = "download_url",
             property = "downloadUrl"
+    ), @Result(
+            column = "layer_name",
+            property = "layerName"
     )})
-    List<ClientFileInfo> getProductListByTppe(@Param("clientId") int clientId,@Param("Filetype") String Filetype);
+    List<ClientFileInfo> getProductListByTppe(@Param("clientId") long clientId,@Param("Filetype") String Filetype);
 
     @Select({"SELECT logic_id,product_name,st_asgeojson(image_geo) as geo,thumb_url,download_url\n" +
             " FROM gis_Client_file\n" +
@@ -74,8 +90,11 @@ public interface GisClientFileMapper {
     ),@Result(
             column = "download_url",
             property = "downloadUrl"
+    ), @Result(
+            column = "layer_name",
+            property = "layerName"
     )})
-    List<ClientFileInfo> getProductListByClass(@Param("clientId") int clientId,@Param("Fileclass") String Fileclass);
+    List<ClientFileInfo> getProductListByClass(@Param("clientId") long clientId,@Param("Fileclass") String Fileclass);
 
 
 
@@ -89,6 +108,12 @@ public interface GisClientFileMapper {
             " set folder_id = #{newfolderId} \n" +
             "WHERE folder_id = #{productId} and client_id = #{clientId} "
     })
-    Boolean modifyFolderByFolderAndClient(@Param("clientId") int clientId,@Param("folderId") int folderId,@Param("newfolderId") int newfolderId);
+    Boolean modifyFolderByFolderAndClient(@Param("clientId") long clientId,@Param("folderId") int folderId,@Param("newfolderId") int newfolderId);
+
+    @Select({"update gis_Client_file\n" +
+            "  set image_geo = st_geomfromgeojson(#{geoJson})\n"
+            + " where product_id = #{productId} "
+    })
+    void updateClientFileImgGeo(@Param("productId") String productId,@Param("geoJson") String geoJson);
 
 }

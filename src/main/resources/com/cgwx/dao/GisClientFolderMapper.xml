@@ -5,13 +5,13 @@
     <result column="folder_id" property="folderId" jdbcType="INTEGER" />
     <result column="parent_id" property="parentId" jdbcType="INTEGER" />
     <result column="folder_name" property="folderName" jdbcType="VARCHAR" />
-    <result column="client_id" property="clientId" jdbcType="INTEGER" />
+    <result column="client_id" property="clientId" jdbcType="BIGINT" />
   </resultMap>
   <insert id="insert" parameterType="com.cgwx.data.entity.GisClientFolder" >
     insert into gis_client_folder (folder_id, parent_id, folder_name, 
       client_id)
     values (#{folderId,jdbcType=INTEGER}, #{parentId,jdbcType=INTEGER}, #{folderName,jdbcType=VARCHAR}, 
-      #{clientId,jdbcType=INTEGER})
+      #{clientId,jdbcType=BIGINT})
   </insert>
   <select id="selectAll" resultMap="BaseResultMap" >
     select folder_id, parent_id, folder_name, client_id

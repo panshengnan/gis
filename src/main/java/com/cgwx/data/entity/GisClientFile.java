@@ -7,19 +7,21 @@ public class GisClientFile {
 
     private Integer folderId;
 
-    private Integer clientId;
+    private Long clientId;
 
     private Object imageGeo;
 
-    private String thumburl;
+    private String thumbUrl;
 
-    private String downloadurl;
+    private String downloadUrl;
 
     private String productType;
 
     private String productClass;
 
     private Integer logicId;
+
+    private String layerName;
 
     public String getProductId() {
         return productId;
@@ -45,11 +47,11 @@ public class GisClientFile {
         this.folderId = folderId;
     }
 
-    public Integer getClientId() {
+    public Long getClientId() {
         return clientId;
     }
 
-    public void setClientId(Integer clientId) {
+    public void setClientId(Long clientId) {
         this.clientId = clientId;
     }
 
@@ -61,20 +63,20 @@ public class GisClientFile {
         this.imageGeo = imageGeo;
     }
 
-    public String getThumburl() {
-        return thumburl;
+    public String getThumbUrl() {
+        return thumbUrl;
     }
 
-    public void setThumburl(String thumburl) {
-        this.thumburl = thumburl == null ? null : thumburl.trim();
+    public void setThumbUrl(String thumbUrl) {
+        this.thumbUrl = thumbUrl == null ? null : thumbUrl.trim();
     }
 
-    public String getDownloadurl() {
-        return downloadurl;
+    public String getDownloadUrl() {
+        return downloadUrl;
     }
 
-    public void setDownloadurl(String downloadurl) {
-        this.downloadurl = downloadurl == null ? null : downloadurl.trim();
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl == null ? null : downloadUrl.trim();
     }
 
     public String getProductType() {
@@ -99,5 +101,13 @@ public class GisClientFile {
 
     public void setLogicId(Integer logicId) {
         this.logicId = logicId;
+    }
+
+    public String getLayerName() {
+        return layerName;
+    }
+
+    public void setLayerName(String layerName) {
+        this.layerName = layerName == null ? null : layerName.trim();
     }
 }
