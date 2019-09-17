@@ -82,6 +82,7 @@ public interface GisStandardProductInfoMapper {
     })
     void updateStandardproductImgGeo(@Param("productId") String productId,@Param("geoJson") String geoJson);
 
+
     @Select({"SELECT count(*)\n FROM gis_standard_product_info\nWHERE product_id = #{productId}"})
     int getproductId(@Param("productId") String productId);
 
