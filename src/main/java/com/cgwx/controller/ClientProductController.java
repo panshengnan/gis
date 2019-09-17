@@ -1,11 +1,9 @@
 package com.cgwx.controller;
 
-import com.cgwx.aop.UserManagement;
-import com.cgwx.aop.exception.ExceptionEnum;
+import com.cgwx.aop.Permission;
 import com.cgwx.aop.result.Result;
 import com.cgwx.aop.result.ResultUtil;
 import com.cgwx.data.dto.*;
-import com.cgwx.data.entity.GisClientFile;
 import com.cgwx.data.entity.GisProductInfo;
 import com.cgwx.data.entity.GisStandardProductInfo;
 import com.cgwx.service.IClientProductService;
@@ -18,9 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @CrossOrigin
@@ -32,7 +29,7 @@ public class ClientProductController {
     @Autowired
     IProductArchiveService iProductArchiveService;
 
-    @RequestMapping(value = "/getProductDetail")  //客户产品列表
+    @RequestMapping(value = "/getProductDetail")
     @CrossOrigin(methods = RequestMethod.GET)
     @ResponseBody
     public JSONObject getProductDetail(@RequestParam(value = "productId", required = true) String productId) {
@@ -60,13 +57,14 @@ public class ClientProductController {
     @CrossOrigin(methods = RequestMethod.GET)
     @ResponseBody
     public Result getAccountId() {
-        long clientId = iClientProductService.getClientId();
+        Long clientId = iClientProductService.getClientId();
 //        UserManagement userManagement = new UserManagement();
 //        return Integer.parseInt(userManagement.getUserId().toString());
         System.out.println(clientId);
-        return ResultUtil.success(clientId);
+        return ResultUtil.success(clientId.toString());
     }
 
+    @Permission
     @RequestMapping(value = "/UpdateClientProductList")
     @CrossOrigin(methods = RequestMethod.GET)
     @ResponseBody
@@ -84,12 +82,36 @@ public class ClientProductController {
         //产品总表归档
         GisProductInfo gisProductInfo = new GisProductInfo();
         gisProductInfo.setProductId(jsonObject2.getString("productId"));
+        gisProductInfo.setProductName(jsonObject2.getString("productId"));
         gisProductInfo.setProductType(5);
-//        gisProductInfo.
         int total_prod = iProductArchiveService.updateProductInfo(gisProductInfo);
+        if(total_prod==0)
+            System.out.println("总表已存在当前产品");
         //标准产品归档
         GisStandardProductInfo gisStandardProductInfo = new GisStandardProductInfo();
-        int stand_prod = iProductArchiveService.updateStandardProduct(gisStandardProductInfo);
+        gisStandardProductInfo.setProductId(jsonObject2.getString("productId"));
+        gisStandardProductInfo.setSatelliteId(jsonObject2.getString("satelliteId"));
+        gisStandardProductInfo.setSensor(jsonObject2.getString("sensor"));
+        gisStandardProductInfo.setImagingTimeStr(jsonObject2.getString("imagingTime"));
+        gisStandardProductInfo.setImageGsd(new BigDecimal(jsonObject2.getString("imageGsd")));
+        gisStandardProductInfo.setCloudPercent(new BigDecimal(jsonObject2.getString("cloudPercent")));
+        gisStandardProductInfo.setProductQuality(jsonObject2.getString("productQuality"));
+        gisStandardProductInfo.setBandAmount(jsonObject2.getInt("bandAmount"));
+        if(jsonObject2.containsKey("bandString")){
+            gisStandardProductInfo.setBandString(jsonObject2.getString("bandString"));//当前字段不一定存在
+        }
+        gisStandardProductInfo.setThumbnail("http://10.10.105.100:18037/metadataapi"+jsonObject2.getString("thumbnail"));
+        gisStandardProductInfo.setProductType(jsonObject2.getInt("productType"));
+        gisStandardProductInfo.setProductBand(jsonObject2.getString("productBand"));
+        gisStandardProductInfo.setRollSatelliteAngle(new BigDecimal(jsonObject2.getString("rollSatelliteAngle")));
+        gisStandardProductInfo.setSolarElevation(Float.valueOf(jsonObject2.getString("solarElevation")));
+        gisStandardProductInfo.setCenterLatitude(Float.valueOf(jsonObject2.getString("centerLatitude")));
+        gisStandardProductInfo.setCenterLongitude(Float.valueOf(jsonObject2.getString("centerLongitude")));
+
+        String geojson = jsonObject2.getString("imageGeo");
+        int stand_prod = iProductArchiveService.updateStandardProduct(gisStandardProductInfo,geojson);
+        if(stand_prod==0)
+            System.out.println("标准数据表已存在当前产品");
         boolean success = iClientProductService.UpdateClientProduct(jsonObject1,jsonObject2);
 
         if(success){
@@ -99,51 +121,25 @@ public class ClientProductController {
         }
     }
 
-    @RequestMapping(value = "/getClientData")
+    @RequestMapping(value = "/getClientData")//创建项目——我的数据列表
     @CrossOrigin(methods = RequestMethod.GET)
     @ResponseBody
-    public Result getClientData() {
+    public Result getClientData(@RequestParam(value = "description", required = true) String description) {
         long clientId = iClientProductService.getClientId();
-//        UserManagement userManagement = new UserManagement();
-//        return Integer.parseInt(userManagement.getUserId().toString());
-        System.out.println(clientId);
-        return ResultUtil.success(clientId);
-    }
-    @RequestMapping(value = "/getPublicProductList")  //公共产品列表---样例数据
-    @CrossOrigin(methods = RequestMethod.GET)
-    @ResponseBody
-    public Result getPublicProductList(//@RequestParam(value = "clientId", required = true) int clientId,//1 按文件夹 2 按类别 3 按级别
-                                        @RequestParam(value = "style", required = true) int style) {
-        long clientId = iClientProductService.getClientId();
-        if(!iClientProductService.is_exist(clientId)){
-            iClientProductService.initFolder(clientId);
-        }
-//        long clientId = 201908;
-        switch (style){
-            case 1 :
-                folderDto folderDto1 = new folderDto();
-                folderDto1.setItemsTree(iClientProductService.buildFolderTree(clientId));
-                return ResultUtil.success(folderDto1);
-            case 2 :
-                folderDto folderDto2 = new folderDto();
-                folderDto2.setItemsTree(iClientProductService.getClientFileByType(clientId));
-                return ResultUtil.success(folderDto2);
-            case 3 :
-                folderDto folderDto3 = new folderDto();
-                folderDto3.setItemsTree(iClientProductService.getClientFileByClass(clientId));
-                return ResultUtil.success(folderDto3);
-            default :
-                return ResultUtil.success("获取用户产品列表失败");
-        }
-
+        List<ClientData> clientDataList = new ArrayList<>();
+        clientDataList= iClientProductService.getClientData(clientId,description);
+        return ResultUtil.success(clientDataList);
     }
 
-    @RequestMapping(value = "/getClientProductList")  //客户产品列表---我的数据
+    @RequestMapping(value = "/getClientProductList")  //我的数据——三种展示方式
     @CrossOrigin(methods = RequestMethod.GET)
     @ResponseBody
     public Result getClientProductList(@RequestParam(value = "style", required = true) int style) {//1 按文件夹 2 按类别 3 按级别
         long clientId = iClientProductService.getClientId();
-//        long clientId = 201908;
+        if(!iClientProductService.is_exist(clientId)){
+            System.out.println("初始化当前登录用户树结构文件夹！");
+            iClientProductService.initFolder(clientId);
+        }
         switch (style){
             case 1 :
                 folderDto folderDto1 = new folderDto();
@@ -162,13 +158,22 @@ public class ClientProductController {
         }
 
     }
+
+    @RequestMapping(value = "/getClientProductDetail")  //我的数据详情
+    @CrossOrigin(methods = RequestMethod.GET)
+    @ResponseBody
+    public Result getClientProductDetail(@RequestParam(value = "productId", required = true) int productId) {//1 按文件夹 2 按类别 3 按级别
+        long clientId = iClientProductService.getClientId();
+        StandardProductDetail standardProductDetail = iClientProductService.getClientProductDetail(clientId,productId);
+        return ResultUtil.success(standardProductDetail);
+    }
+
     @RequestMapping(value = "/MoveFolder")  //移动
     @CrossOrigin(methods = RequestMethod.GET)
     @ResponseBody
     public Result MoveFolder(@RequestParam(value = "sourceId", required = true) int sourceId,
                            @RequestParam(value = "descId", required = true) int descId) { //,@RequestParam(value = "clientId", required = true) int clientId
         long clientId = iClientProductService.getClientId();
-//        long clientId = 201908;
         if(iClientProductService.moveFolder(sourceId,descId,clientId)){
             System.out.println("移动文件夹成功" );
             List<FolderItems> item = iClientProductService.buildFolderTree(clientId);
@@ -186,7 +191,6 @@ public class ClientProductController {
     public Result AddFolder(@RequestParam(value = "folderName", required = true) String folderName,
                            @RequestParam(value = "parentId", required = true) int parentId) { // ,@RequestParam(value = "clientId", required = true)int clientId
         long clientId = iClientProductService.getClientId();
-//        long clientId = 201908;
         if(iClientProductService.addFolder(folderName,parentId,clientId)){
             System.out.println("新建文件夹成功" );
             List<FolderItems> item = iClientProductService.buildFolderTree(clientId);
@@ -202,7 +206,6 @@ public class ClientProductController {
     @ResponseBody
     public Result DeleteFolder(@RequestParam(value = "folderId", required = true) int folderId) { //,@RequestParam(value = "clientId", required = true)int clientId
         long clientId = iClientProductService.getClientId();
-//        long clientId = 201908;
         if(iClientProductService.deleteFolder(folderId,clientId)){
             System.out.println("删除文件夹成功" );
             List<FolderItems> item = iClientProductService.buildFolderTree(clientId);
@@ -219,7 +222,6 @@ public class ClientProductController {
     public Result RenameFolder(@RequestParam(value = "folderId", required = true) int folderId,
                           @RequestParam(value = "newName", required = true)String newName) { // ,@RequestParam(value = "clientId", required = true)int clientId
         long clientId = iClientProductService.getClientId();
-//        long clientId = 201908;
         if(iClientProductService.RenameFolder(folderId,newName,clientId)){
             System.out.println("修改文件夹名称成功" );
             List<FolderItems> item = iClientProductService.buildFolderTree(clientId);
@@ -236,7 +238,6 @@ public class ClientProductController {
     public Result Movefile(@RequestParam(value = "productId", required = true) int productId,
                              @RequestParam(value = "descId", required = true)int descId) { //, @RequestParam(value = "clientId", required = true)int clientId
         long clientId = iClientProductService.getClientId();
-//        long clientId = 201908;
         if(iClientProductService.moveFlie(productId,descId,clientId)){
             System.out.println("移动文件成功" );
             List<FolderItems> item = iClientProductService.buildFolderTree(clientId);

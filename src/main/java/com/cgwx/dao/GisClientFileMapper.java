@@ -1,5 +1,6 @@
 package com.cgwx.dao;
 
+import com.cgwx.data.dto.ClientData;
 import com.cgwx.data.dto.ClientFileInfo;
 import com.cgwx.data.entity.GisClientFile;
 import org.apache.ibatis.annotations.*;
@@ -13,15 +14,11 @@ public interface GisClientFileMapper {
 
     @Select({"SELECT product_id\n" +
             " FROM gis_Client_file\n" +
-            "WHERE client_id = #{clientId} and  folder_id = #{folderId}"
+            "WHERE client_id = #{clientId} and  logic_id = #{logicId}"
     })
-    @Results({@Result(
-            column = "logic_id",
-            property = "logicId"
-    )})
     String getProductIdbylogicid(@Param("clientId") long clientId,@Param("logicId") int logicId);
 
-    @Select({"SELECT logic_id,product_name,st_asgeojson(image_geo) as geo,thumb_url,download_url\n" +
+    @Select({"SELECT logic_id,product_name,st_asgeojson(image_geo) as geo,thumb_url,download_url,layer_name\n" +
             " FROM gis_Client_file\n" +
             "WHERE client_id = #{clientId} and  folder_id = #{folderId}"
     })
@@ -46,7 +43,7 @@ public interface GisClientFileMapper {
     )})
     List<ClientFileInfo> getProductListByFolderId(@Param("clientId") long clientId,@Param("folderId") int folderId);
 
-    @Select({"SELECT logic_id,product_name,st_asgeojson(image_geo) as geo,thumb_url,download_url\n" +
+    @Select({"SELECT logic_id,product_name,st_asgeojson(image_geo) as geo,thumb_url,download_url,layer_name\n" +
             " FROM gis_Client_file\n" +
             "WHERE client_id = #{clientId} and  product_type = #{Filetype}"
     })
@@ -71,7 +68,7 @@ public interface GisClientFileMapper {
     )})
     List<ClientFileInfo> getProductListByTppe(@Param("clientId") long clientId,@Param("Filetype") String Filetype);
 
-    @Select({"SELECT logic_id,product_name,st_asgeojson(image_geo) as geo,thumb_url,download_url\n" +
+    @Select({"SELECT logic_id,product_name,st_asgeojson(image_geo) as geo,thumb_url,download_url,layer_name\n" +
             " FROM gis_Client_file\n" +
             "WHERE client_id = #{clientId} and  product_class = #{Fileclass}"
     })
@@ -115,5 +112,28 @@ public interface GisClientFileMapper {
             + " where product_id = #{productId} "
     })
     void updateClientFileImgGeo(@Param("productId") String productId,@Param("geoJson") String geoJson);
+
+    @Select({"SELECT product_id,product_name,thumb_url,layer_name \n" +
+            " FROM gis_Client_file as A  \n" +
+            "WHERE  client_id = #{clientId} and product_name like CONCAT('%',#{description},'%') and product_class != '标准产品' "
+    })
+    @Results({@Result(
+            column = "product_id",
+            property = "productId"
+    ), @Result(
+            column = "product_name",
+            property = "productName"
+    ), @Result(
+            column = "thumb_url",
+            property = "thumbnailUrl"
+    ), @Result(
+            column = "layer_name",
+            property = "layerName"
+    )
+    })
+    List<ClientData> getClientDataList(@Param("clientId") long clientId,@Param("description")String description);
+
+    @Select({"SELECT count(*)\n FROM gis_Client_file\nWHERE product_id = #{productId}and client_id = #{clientId}"})
+    int getproductId(@Param("productId") String productId,@Param("clientId") long clientId);
 
 }

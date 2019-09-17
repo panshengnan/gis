@@ -58,8 +58,10 @@ public class MetadataController
     @CrossOrigin()
     @ResponseBody
     public Result getExampleDataDetail(@RequestParam(value = "productId", required = true) String productId) {
+        int isExist = pdmProductInfoMapper.getproductId(productId);
+        if(isExist==0)
+            return ResultUtil.success("当前产品Id无效");
         int productType = pdmProductInfoMapper.selectProductTypeByProductId(productId);
-        System.out.print(productType);
         String TypeName = pdmProductTypeInfoMapper.selectProductTypeDescriptionByProductType(productType);
         switch (TypeName) {
             case "正射产品":
@@ -76,7 +78,8 @@ public class MetadataController
                 ThemeticProductDetail multiPeriodThemeticProductDetail = metadataService.getThemeticProductDetail(productId, singlePeriodProductIdList);
                 return ResultUtil.success(multiPeriodThemeticProductDetail);
             case "标准产品":
-
+                StandardProductDetail standardProductDetail = metadataService.getStandardProductDetail(productId);
+                return ResultUtil.success(standardProductDetail);
             default:
                 return ResultUtil.success("当前产品Id无效");
         }
@@ -86,10 +89,8 @@ public class MetadataController
     @ResponseBody
     public Result StandardProductDetail(@RequestParam(value = "productId", required = true) String productId) {
 
-        List<String> singlePeriodProductIdList=pdmThemeticProductDetailInfoMapper.selecSinglePeriodThemeticProductList(productId);
-        // System.err.println(singlePeriodProductIdList);
-        ThemeticProductDetail multiPeriodThemeticProductDetail = metadataService.getThemeticProductDetail(productId,singlePeriodProductIdList);
-        return ResultUtil.success(multiPeriodThemeticProductDetail);
+        StandardProductDetail standardProductDetail = metadataService.getStandardProductDetail(productId);
+        return ResultUtil.success(standardProductDetail);
     }
     @RequestMapping(value = "/themeticProductDetail")  //专题产品详情
     @CrossOrigin(methods = RequestMethod.GET)

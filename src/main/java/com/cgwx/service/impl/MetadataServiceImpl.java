@@ -43,12 +43,18 @@ public class MetadataServiceImpl implements IMetadataService {
 
     @Autowired
     IProductDownloadServiceImpl iProductDownloadService;
+
     @Autowired
     GisProductStoreLinkInfoMapper pdmProductStoreLinkInfoMapper;
+
     @Autowired
     GisAdvancedProductShpInfoMapper pdmAdvancedProductShpInfoMapper;
+
     @Autowired
     GisProductLayerInfoMapper pdmProductLayerInfoMapper;
+
+    @Autowired
+    GisStandardProductInfoMapper gisStandardProductInfoMapper;
 
     @Value("${productStoreLinkHead}")
     private String productStoreLinkHead;//拼链接
@@ -399,7 +405,12 @@ public class MetadataServiceImpl implements IMetadataService {
     return subdivisionProductDetail;
 
     }
+    @Override
+    public StandardProductDetail getStandardProductDetail(String productId){
 
+        StandardProductDetail standardProductDetail = gisStandardProductInfoMapper.selectStandardProductDetailByProductId(productId);
+        return standardProductDetail;
+    }
 
     //获取产品列表
     @Override
@@ -913,7 +924,6 @@ public class MetadataServiceImpl implements IMetadataService {
             for(int i=0;i<productIdList.size();i++)
             {
                 int productType= pdmProductInfoMapper.selectProductTypeByProductId(productIdList.get(i));
-                System.out.print(productType);
                 String  TypeName = pdmProductTypeInfoMapper.selectProductTypeDescriptionByProductType(productType);
                 ExampleData exampleDatatemp = new ExampleData();
                 exampleDatatemp.setProductId(productIdList.get(i));
@@ -931,6 +941,7 @@ public class MetadataServiceImpl implements IMetadataService {
                         SubdivisionProductDetail subdivisionProductDetail = getSubdivisionProductDetail(productIdList.get(i));
                         exampleDatatemp.setProductName(subdivisionProductDetail.getProductName());
                         exampleDatatemp.setThumbnailUrl(subdivisionProductDetail.getThumbnailUrl());
+
                     case "专题产品":
                         List<String> singlePeriodProductIdList=pdmThemeticProductDetailInfoMapper.selecSinglePeriodThemeticProductList(productIdList.get(i));
                         ThemeticProductDetail multiPeriodThemeticProductDetail = getThemeticProductDetail(productIdList.get(i),singlePeriodProductIdList);

@@ -706,7 +706,10 @@ public class IProductArchiveServiceImpl implements IProductArchiveService {
 
     @Override/**/
     public int updateProductInfo(GisProductInfo pdmProductInfo) {
+        if(pdmProductInfoMapper.getproductId(pdmProductInfo.getProductId())==0){
         return pdmProductInfoMapper.insert(pdmProductInfo);
+        }
+        return 0;
     }
 
     @Override/**/
@@ -1043,8 +1046,11 @@ public class IProductArchiveServiceImpl implements IProductArchiveService {
 
     }
     @Override
-    public int updateStandardProduct(GisStandardProductInfo gisStandardProductInfo) {
-
-        return gisStandardProductInfoMapper.insert(gisStandardProductInfo);
+    public int updateStandardProduct(GisStandardProductInfo gisStandardProductInfo,String geojson) {
+     if(gisStandardProductInfoMapper.getproductId(gisStandardProductInfo.getProductId())==0){
+        int feed = gisStandardProductInfoMapper.insert(gisStandardProductInfo);
+        gisStandardProductInfoMapper.updateStandardproductImgGeo(gisStandardProductInfo.getProductId(),geojson);
+        return feed;}
+     return 0;
     }
 }

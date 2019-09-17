@@ -5,11 +5,14 @@ import com.cgwx.aop.result.ResultUtil;
 import com.cgwx.dao.GisClientFileMapper;
 import com.cgwx.dao.GisClientFolderMapper;
 import com.cgwx.dao.GisStandardProductTypeMapper;
+import com.cgwx.data.dto.ClientData;
 import com.cgwx.data.dto.ClientFileInfo;
 import com.cgwx.data.dto.FolderItems;
+import com.cgwx.data.dto.StandardProductDetail;
 import com.cgwx.data.entity.GisClientFile;
 import com.cgwx.data.entity.GisClientFolder;
 import com.cgwx.service.IClientProductService;
+import com.cgwx.service.IMetadataService;
 import net.sf.json.JSONObject;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -36,10 +39,15 @@ public class ClientProductServiceImpl implements IClientProductService {
     GisClientFileMapper gisClientFileMapper;
     @Autowired
     GisStandardProductTypeMapper gisStandardProductTypeMapper;
+    @Autowired
+    IMetadataService metadataService;
+
     @Override
     public long getClientId(){
         UserManagement userManagement = new UserManagement();
         JSONObject jsonObject = JSONObject.fromObject(userManagement.getAccountId());
+//        System.out.println(userManagement.getAccountId());
+        //System.out.println(jsonObject);
         String ClientId = jsonObject.getString("data");
         return Long.parseLong(ClientId);
 }
@@ -71,32 +79,34 @@ public class ClientProductServiceImpl implements IClientProductService {
         GisClientFile gisClientFile = new GisClientFile();
         long clientId = Long.parseLong(jsonObject1.getString( "clientId"));
         String productId =jsonObject1.getString( "productId");
-        String downloadUrl =jsonObject1.getString( "downloadUrl");
-
-        SimpleDateFormat df = new SimpleDateFormat("MMddHHmmss");//设置日期格式
-
-        String currentTime = df.format(new Date());
-        int logicId = Integer.parseInt(currentTime);
-        System.out.println(logicId);
-        gisClientFile.setClientId(clientId);
-        gisClientFile.setFolderId(0);
-        gisClientFile.setLogicId(logicId);
-        gisClientFile.setProductId(productId);
-        gisClientFile.setProductName(productId);
-        gisClientFile.setProductClass("标准产品");
-        int typeIndex = Integer.parseInt(jsonObject2.getString("productType"));
-        String productType = gisStandardProductTypeMapper.selectTypeByIndex(typeIndex);
-        gisClientFile.setProductType(productType);
-        gisClientFile.setDownloadUrl(downloadUrl);
-        gisClientFile.setThumbUrl("http://10.10.105.100:18037/metadataapi"+jsonObject2.getString("thumbnail"));
-        String geojson = jsonObject2.getString("imageGeo");
-
-        if(gisClientFileMapper.insert(gisClientFile)!=0){
-            gisClientFileMapper.updateClientFileImgGeo(productId, geojson);
-            return true;
-        }else{
+        if(gisClientFileMapper.getproductId(productId,clientId)!=0){
             return false;
+        }else{
+            String downloadUrl =jsonObject1.getString( "downloadUrl");
+            SimpleDateFormat df = new SimpleDateFormat("MMddHHmmss");//设置日期格式
+            String currentTime = df.format(new Date());
+            int logicId = Integer.parseInt(currentTime);
+            System.out.println(logicId);
+            gisClientFile.setClientId(clientId);
+            gisClientFile.setFolderId(0);
+            gisClientFile.setLogicId(logicId);
+            gisClientFile.setProductId(productId);
+            gisClientFile.setProductName(productId);
+            gisClientFile.setProductClass("标准产品");
+            int typeIndex = Integer.parseInt(jsonObject2.getString("productType"));
+            String productType = gisStandardProductTypeMapper.selectTypeByIndex(typeIndex);
+            gisClientFile.setProductType(productType);
+            gisClientFile.setDownloadUrl(downloadUrl);
+            gisClientFile.setThumbUrl("http://10.10.105.100:18037/metadataapi"+jsonObject2.getString("thumbnail"));
+            String geojson = jsonObject2.getString("imageGeo");
+            if(gisClientFileMapper.insert(gisClientFile)!=0){
+                gisClientFileMapper.updateClientFileImgGeo(productId, geojson);
+                return true;
+            }else{
+                return false;
+            }
         }
+
     }
     @Override
     public  List<FolderItems> buildFolderTree(long clientId) {
@@ -215,12 +225,13 @@ public class ClientProductServiceImpl implements IClientProductService {
         FolderItems folderItems0 = new FolderItems();
         folderItems0.setId(1);
         folderItems0.setParentId(0);
-        folderItems0.setName("普通光学");
-        List<ClientFileInfo> clientFileInfoList1 = gisClientFileMapper.getProductListByTppe(clientId,"普通光学");
+        folderItems0.setName("普通光学影像");
+        List<ClientFileInfo> clientFileInfoList1 = gisClientFileMapper.getProductListByTppe(clientId,"普通光学影像");
         List<FolderItems> folderItemsList1 = new ArrayList<>();
         for(ClientFileInfo clientFileInfo :clientFileInfoList1){
             FolderItems folderItems1 = new FolderItems();
             folderItems1.setId(clientFileInfo.getLogicId());
+            folderItems1.setParentId(1);
             folderItems1.setName(clientFileInfo.getProductName());
             folderItems1.setGeoJson(clientFileInfo.getGeoJson().toString());
             folderItems1.setDownloadUrl(clientFileInfo.getDownloadUrl());
@@ -232,14 +243,15 @@ public class ClientProductServiceImpl implements IClientProductService {
         folderItemsList.add(folderItems0);
 
         FolderItems folderItems1 = new FolderItems();
-        folderItems1.setId(1);
+        folderItems1.setId(2);
         folderItems1.setParentId(0);
-        folderItems1.setName("夜光");
-        List<ClientFileInfo> clientFileInfoList2 = gisClientFileMapper.getProductListByTppe(clientId,"夜光");
+        folderItems1.setName("夜光影像");
+        List<ClientFileInfo> clientFileInfoList2 = gisClientFileMapper.getProductListByTppe(clientId,"夜光影像");
         List<FolderItems> folderItemsList2 = new ArrayList<>();
         for(ClientFileInfo clientFileInfo :clientFileInfoList2){
             FolderItems folderItems2 = new FolderItems();
             folderItems2.setId(clientFileInfo.getLogicId());
+            folderItems2.setParentId(2);
             folderItems2.setName(clientFileInfo.getProductName());
             folderItems2.setGeoJson(clientFileInfo.getGeoJson().toString());
             folderItems2.setDownloadUrl(clientFileInfo.getDownloadUrl());
@@ -251,39 +263,41 @@ public class ClientProductServiceImpl implements IClientProductService {
         folderItemsList.add(folderItems1);
 
         FolderItems folderItems2 = new FolderItems();
-        folderItems2.setId(1);
+        folderItems2.setId(3);
         folderItems2.setParentId(0);
-        folderItems2.setName("视频");
-        List<ClientFileInfo> clientFileInfoList3 = gisClientFileMapper.getProductListByTppe(clientId,"视频");
+        folderItems2.setName("视频影像");
+        List<ClientFileInfo> clientFileInfoList3 = gisClientFileMapper.getProductListByTppe(clientId,"视频影像");
         List<FolderItems> folderItemsList3 = new ArrayList<>();
         for(ClientFileInfo clientFileInfo :clientFileInfoList3){
             FolderItems folderItems3 = new FolderItems();
             folderItems3.setId(clientFileInfo.getLogicId());
+            folderItems3.setParentId(3);
             folderItems3.setName(clientFileInfo.getProductName());
             folderItems3.setGeoJson(clientFileInfo.getGeoJson().toString());
             folderItems3.setDownloadUrl(clientFileInfo.getDownloadUrl());
             folderItems3.setThumbUrl(clientFileInfo.getThumbUrl());
             folderItems3.setLayerName(clientFileInfo.getLayerName());
-            folderItemsList2.add(folderItems3);
+            folderItemsList3.add(folderItems3);
         }
         folderItems2.setChildren(folderItemsList3);
         folderItemsList.add(folderItems2);
 
         FolderItems folderItems3 = new FolderItems();
-        folderItems3.setId(1);
+        folderItems3.setId(4);
         folderItems3.setParentId(0);
-        folderItems3.setName("多光谱");
-        List<ClientFileInfo> clientFileInfoList4 = gisClientFileMapper.getProductListByTppe(clientId,"多光谱");
+        folderItems3.setName("多光谱光学影像");
+        List<ClientFileInfo> clientFileInfoList4 = gisClientFileMapper.getProductListByTppe(clientId,"多光谱光学影像");
         List<FolderItems> folderItemsList4 = new ArrayList<>();
-        for(ClientFileInfo clientFileInfo :clientFileInfoList3){
+        for(ClientFileInfo clientFileInfo :clientFileInfoList4){
             FolderItems folderItems4 = new FolderItems();
             folderItems4.setId(clientFileInfo.getLogicId());
+            folderItems4.setParentId(4);
             folderItems4.setName(clientFileInfo.getProductName());
             folderItems4.setGeoJson(clientFileInfo.getGeoJson().toString());
             folderItems4.setDownloadUrl(clientFileInfo.getDownloadUrl());
             folderItems4.setThumbUrl(clientFileInfo.getThumbUrl());
             folderItems4.setLayerName(clientFileInfo.getLayerName());
-            folderItemsList2.add(folderItems4);
+            folderItemsList4.add(folderItems4);
         }
         folderItems3.setChildren(folderItemsList4);
         folderItemsList.add(folderItems3);
@@ -323,7 +337,7 @@ public class ClientProductServiceImpl implements IClientProductService {
         folderItemsList.add(folderItems0);
 
         FolderItems folderItems1 = new FolderItems();
-        folderItems1.setId(1);
+        folderItems1.setId(2);
         folderItems1.setParentId(0);
         folderItems1.setName("高级产品");
         List<ClientFileInfo> clientFileInfoList2 = gisClientFileMapper.getProductListByClass(clientId,"高级产品");
@@ -331,6 +345,7 @@ public class ClientProductServiceImpl implements IClientProductService {
         for(ClientFileInfo clientFileInfo :clientFileInfoList2){
             FolderItems folderItems2 = new FolderItems();
             folderItems2.setId(clientFileInfo.getLogicId());
+            folderItems2.setParentId(2);
             folderItems2.setName(clientFileInfo.getProductName());
             folderItems2.setGeoJson(clientFileInfo.getGeoJson().toString());
             folderItems2.setDownloadUrl(clientFileInfo.getDownloadUrl());
@@ -342,7 +357,7 @@ public class ClientProductServiceImpl implements IClientProductService {
         folderItemsList.add(folderItems1);
 
         FolderItems folderItems2 = new FolderItems();
-        folderItems2.setId(1);
+        folderItems2.setId(3);
         folderItems2.setParentId(0);
         folderItems2.setName("专题产品");
         List<ClientFileInfo> clientFileInfoList3 = gisClientFileMapper.getProductListByClass(clientId,"专题产品");
@@ -350,12 +365,13 @@ public class ClientProductServiceImpl implements IClientProductService {
         for(ClientFileInfo clientFileInfo :clientFileInfoList3){
             FolderItems folderItems3 = new FolderItems();
             folderItems3.setId(clientFileInfo.getLogicId());
+            folderItems3.setParentId(3);
             folderItems3.setName(clientFileInfo.getProductName());
             folderItems3.setGeoJson(clientFileInfo.getGeoJson().toString());
             folderItems3.setDownloadUrl(clientFileInfo.getDownloadUrl());
             folderItems3.setThumbUrl(clientFileInfo.getThumbUrl());
             folderItems3.setLayerName(clientFileInfo.getLayerName());
-            folderItemsList2.add(folderItems3);
+            folderItemsList3.add(folderItems3);
         }
         folderItems2.setChildren(folderItemsList3);
         folderItemsList.add(folderItems2);
@@ -383,6 +399,12 @@ public class ClientProductServiceImpl implements IClientProductService {
         }else{
             return false;
         }
+    }
+    @Override
+    public List<ClientData> getClientData(long clientId,String description){
+        List<ClientData> clientDataList = new ArrayList<>();
+        clientDataList= gisClientFileMapper.getClientDataList(clientId,description);
+        return clientDataList;
     }
     @Override
     public File downloadFile(String urlPath, String downloadDir) {
@@ -438,5 +460,9 @@ public class ClientProductServiceImpl implements IClientProductService {
         }
 
     }
-
+    public StandardProductDetail getClientProductDetail(long clientId,int productId){
+        String realId = gisClientFileMapper.getProductIdbylogicid(clientId,productId);
+        StandardProductDetail standardProductDetail = metadataService.getStandardProductDetail(realId);
+        return standardProductDetail;
+    }
 }

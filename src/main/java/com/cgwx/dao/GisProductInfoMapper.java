@@ -275,7 +275,7 @@ public interface GisProductInfoMapper {
 
     @Select({"SELECT product_id\n" +
             " FROM gis_product_info\n" +
-            "WHERE product_name LIKE CONCAT('%' ,#{description} ,'%')"
+            "WHERE product_name LIKE CONCAT('%' ,#{description} ,'%') and product_type!=5"
     })
     List<String> getProductIdList(@Param("description")String description);
 
@@ -325,5 +325,8 @@ public interface GisProductInfoMapper {
             "WHERE produce_id = #{productId} "
     })
     int getProductType(@Param("productId")String productId);
+
+    @Select({"SELECT count(*)\n FROM gis_product_info\nWHERE product_id = #{productId}"})
+    int getproductId(@Param("productId") String productId);
 
 }

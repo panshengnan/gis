@@ -15,6 +15,8 @@ public interface IMetadataService {
 
     InlayProductDetail getInlayProductDetail(String productId);
 
+    StandardProductDetail getStandardProductDetail(String productId);
+
     List<FileUrl> getFileListAndUrl(String productId, String singlePeriodProductId);
 
     //List<FileUrl> getFileListAndUrl(String productId);

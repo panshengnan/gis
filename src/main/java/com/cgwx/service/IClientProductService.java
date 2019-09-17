@@ -1,6 +1,8 @@
 package com.cgwx.service;
 
+import com.cgwx.data.dto.ClientData;
 import com.cgwx.data.dto.FolderItems;
+import com.cgwx.data.dto.StandardProductDetail;
 import com.cgwx.data.entity.GisClientFile;
 import net.sf.json.JSONObject;
 
@@ -20,9 +22,10 @@ public interface IClientProductService {
     boolean moveFlie(int productId,int descId,long clientId);
     List<FolderItems> buildFolderTree(long clientId);
     List<FolderItems> listToTree(List<FolderItems> list);
-
     List<FolderItems> getClientFileByType(long clientId);
     List<FolderItems> getClientFileByClass(long clientId);
     File downloadFile(String urlPath, String downloadDir);
+    List<ClientData> getClientData(long clientId,String description);
+    StandardProductDetail getClientProductDetail(long clientId,int productId);
 
 }
