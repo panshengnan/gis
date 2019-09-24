@@ -21,7 +21,7 @@ public class OrthoProductDetail {
 
         private String sensor;
 
-//        private String resolution;
+        private String resolution;
 //
 //        private String imageBreath;
 //
@@ -258,13 +258,13 @@ public class OrthoProductDetail {
             this.sensor = sensor == null ? null : sensor.trim();
         }
 
-//        public String getResolution() {
-//            return resolution;
-//        }
-//
-//        public void setResolution(String  resolution) {
-//            this.resolution = resolution;
-//        }
+        public String getResolution() {
+            return resolution;
+        }
+
+        public void setResolution(String  resolution) {
+            this.resolution = resolution;
+        }
 //
 //        public String getImageBreath() {
 //            return imageBreath;

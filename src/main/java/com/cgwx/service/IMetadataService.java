@@ -61,4 +61,9 @@ public interface IMetadataService {
     List<ThemeticProductListByGeos> getThemeticProductListByConditions(String clientname, String description, Object geo, String producer, List<Industry> industryList);
 
     List<ExampleData> getExampleDataList( List<String> productIdList);
+
+    //增加样例树结构展示
+
+    List<FolderItems> buildTree();
+
 }

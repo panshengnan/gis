@@ -21,6 +21,8 @@ public class GisInlayProductInfo {
 
     private String delieverTime;
 
+    private String inlayType;
+
     public String getProductId() {
         return productId;
     }
@@ -99,5 +101,13 @@ public class GisInlayProductInfo {
 
     public void setDelieverTime(String delieverTime) {
         this.delieverTime = delieverTime == null ? null : delieverTime.trim();
+    }
+
+    public String getInlayType() {
+        return inlayType;
+    }
+
+    public void setInlayType(String inlayType) {
+        this.inlayType = inlayType == null ? null : inlayType.trim();
     }
 }

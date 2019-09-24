@@ -54,6 +54,8 @@ public class GisOrthoProductInfo {
 
     private Double centerLatitude;
 
+    private String orthoType;
+
     public String getProductId() {
         return productId;
     }
@@ -252,5 +254,13 @@ public class GisOrthoProductInfo {
 
     public void setCenterLatitude(Double centerLatitude) {
         this.centerLatitude = centerLatitude;
+    }
+
+    public String getOrthoType() {
+        return orthoType;
+    }
+
+    public void setOrthoType(String orthoType) {
+        this.orthoType = orthoType == null ? null : orthoType.trim();
     }
 }

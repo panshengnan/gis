@@ -1,5 +1,6 @@
 package com.cgwx.dao;
 
+import com.cgwx.data.dto.ItemsTreeDto;
 import com.cgwx.data.dto.StandardProductDetail;
 import com.cgwx.data.entity.GisStandardProductInfo;
 import org.apache.ibatis.annotations.*;
@@ -31,7 +32,6 @@ public interface GisStandardProductInfoMapper {
     ), @Result(
             column = "geo",
             property = "imageGeo"
-
     ), @Result(
             column = "imaging_time_str",
             property = "imagingTimeStr"
@@ -85,5 +85,33 @@ public interface GisStandardProductInfoMapper {
 
     @Select({"SELECT count(*)\n FROM gis_standard_product_info\nWHERE product_id = #{productId}"})
     int getproductId(@Param("productId") String productId);
+
+
+    @Select({"SELECT product_id,\n" +
+            "        st_asgeojson(image_geo) as geo,\n" +
+            "        satellite_id,sensor,imaging_time_str, \n" +
+            "       image_gsd,cloud_percent,\n" +
+            "        product_quality, band_amount, band_string, thumbnail,product_type,product_band,\n" +
+            "        roll_satellite_angle,solar_elevation,center_longitude,center_latitude \n"+
+            "FROM   gis_standard_product_info\n" +
+            " WHERE   product_id = #{productId}"
+    })
+    @Results({@Result(
+            column = "product_id",
+            property = "productId"
+    ), @Result(
+            column = "geo",
+            property = "geoJson"
+    ), @Result(
+            column = "thumbnail",
+            property = "thumbUrl"
+    ), @Result(
+            column = "sensor",
+            property = "downloadUrl"
+    ), @Result(
+            column = "sensor",
+            property = "layerName"
+    )})
+    List<ItemsTreeDto> getTreeDto();
 
 }

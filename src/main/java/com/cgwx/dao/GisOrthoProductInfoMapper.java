@@ -25,7 +25,7 @@ public interface GisOrthoProductInfoMapper {
             "        satellite,sensor,center_time, \n" +
             "       geographic_info,producer,\n" +
             "        receive_station, receive_time, swing_satellite_angle, cast(cloud_percent as VARCHAR),width_in_meters,height_in_meters,\n" +
-            "        product_quality,bands,center_longitude,center_latitude \n"+
+            "        product_quality,bands,center_longitude,center_latitude,ortho_type \n"+
             "FROM   gis_ortho_product_info\n" +
             " WHERE   product_id = #{productId}"
     })
@@ -84,6 +84,9 @@ public interface GisOrthoProductInfoMapper {
     ),@Result(
             column = "center_latitude",
             property = "centerLatitude"
+    ),@Result(
+            column = "ortho_type",
+            property = "productType"
     )
     })
         //查询请求详细信息调用的数据库语句

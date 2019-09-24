@@ -26,6 +26,5 @@ public interface IClientProductService {
     List<FolderItems> getClientFileByClass(long clientId);
     File downloadFile(String urlPath, String downloadDir);
     List<ClientData> getClientData(long clientId,String description);
-    StandardProductDetail getClientProductDetail(long clientId,int productId);
 
 }

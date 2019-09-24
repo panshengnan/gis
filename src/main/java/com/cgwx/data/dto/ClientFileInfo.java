@@ -8,6 +8,24 @@ public class ClientFileInfo {
     private String thumbUrl;
     private String downloadUrl;
     private String layerName;
+    private String productId;
+    private String productType;
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public void setProductType(String productType) {
+        this.productType = productType;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
 
     public String getLayerName() {
         return layerName;

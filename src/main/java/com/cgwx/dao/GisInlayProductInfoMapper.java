@@ -21,7 +21,7 @@ public interface GisInlayProductInfoMapper {
     @Select({"SELECT product_id,inlay_product_name,\n" +
             "        st_asgeojson(image_geo) as geo,inlay_product_directory,\n" +
             "        producer,size_of_tif, client_name, deliever_name, \n" +
-            "        deliever_time,geographic_info\n" +
+            "        deliever_time,geographic_info,inlay_type\n" +
             " FROM   gis_inlay_product_info\n" +
             " WHERE   product_id = #{productId}"
     })
@@ -56,6 +56,9 @@ public interface GisInlayProductInfoMapper {
     ),@Result(
             column = "inlay_product_directory",
             property = "inlayProductDirectory"
+    ),@Result(
+            column = "inlay_type",
+            property = "inlayType"
     )
     })
         //查询请求详细信息调用的数据库语句

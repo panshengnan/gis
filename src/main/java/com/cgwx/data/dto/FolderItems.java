@@ -9,12 +9,21 @@ public class FolderItems {
     private int parentId;
     private String name;
     private List<FolderItems> children;
-    //private  List<ClientFileInfo> ProductList;
-
     private String geoJson;
     private String thumbUrl;
     private String downloadUrl;
     private String layerName;
+    private String productId;
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+
     public String getLayerName() {
         return layerName;
     }
@@ -47,21 +56,21 @@ public class FolderItems {
         this.downloadUrl = downloadUrl;
     }
 
-    public FolderItems(){
-
-    }
-    public FolderItems(int id,int parentId,String name,List<FolderItems> children){
-        this.id = id;
-        this.parentId = parentId;
-        this.name = name;
-        this.children = children;
-    }
-    public FolderItems(int id,int parentId,String name){
-        this.id = id;
-        this.parentId = parentId;
-        this.name = name;
-
-    }
+//    public FolderItems(){
+//
+//    }
+//    public FolderItems(int id,int parentId,String name,List<FolderItems> children){
+//        this.id = id;
+//        this.parentId = parentId;
+//        this.name = name;
+//        this.children = children;
+//    }
+//    public FolderItems(int id,int parentId,String name){
+//        this.id = id;
+//        this.parentId = parentId;
+//        this.name = name;
+//
+//    }
     public int getId() {
         return id;
     }
@@ -92,18 +101,11 @@ public class FolderItems {
         this.children = children;
     }
 
-//    public List<ClientFileInfo> getProductList() {
-//        return ProductList;
-//    }
 //
-//    public void setProductList(List<ClientFileInfo> productList) {
-//        ProductList = productList;
+//    @Override
+//    public String toString() {
+//
+//        return JSON.toJSONString(this);
 //    }
-
-    @Override
-    public String toString() {
-
-        return JSON.toJSONString(this);
-    }
 
 }

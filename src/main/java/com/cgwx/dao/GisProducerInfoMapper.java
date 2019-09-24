@@ -21,21 +21,21 @@ public interface GisProducerInfoMapper {
             "FROM gis_producer_info\n" +
             "WHERE producer like  '%${producer}%' and producer <> '' order by producer collate \"C\" "
     )
-    @Results({@Result(
-            column = "product_id",
-            property = "productId"
-    ), @Result(
-            column = "product_description",
-            property = "productDescription"
-    ), @Result(
-            column = "product_id",
-            property = "productId"
-    ), @Result(
-            column = "industry",
-            property = "industry"
-    ),@Result(
-            column = "product_type",
-            property = "productType"
-    )})
+//    @Results({@Result(
+//            column = "product_id",
+//            property = "productId"
+//    ), @Result(
+//            column = "product_description",
+//            property = "productDescription"
+//    ), @Result(
+//            column = "product_id",
+//            property = "productId"
+//    ), @Result(
+//            column = "industry",
+//            property = "industry"
+//    ),@Result(
+//            column = "product_type",
+//            property = "productType"
+//    )})
     List<String> selectProducerList(@Param("producer") String producer);
 }

@@ -1,7 +1,6 @@
 package com.cgwx.service.impl;
 
 import com.cgwx.aop.UserManagement;
-import com.cgwx.aop.result.ResultUtil;
 import com.cgwx.dao.GisClientFileMapper;
 import com.cgwx.dao.GisClientFolderMapper;
 import com.cgwx.dao.GisStandardProductTypeMapper;
@@ -18,8 +17,8 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -39,8 +38,8 @@ public class ClientProductServiceImpl implements IClientProductService {
     GisClientFileMapper gisClientFileMapper;
     @Autowired
     GisStandardProductTypeMapper gisStandardProductTypeMapper;
-    @Autowired
-    IMetadataService metadataService;
+    @Value("${MetaQueryUrl}")
+    private String MetaQueryUrl;
 
     @Override
     public long getClientId(){
@@ -55,11 +54,11 @@ public class ClientProductServiceImpl implements IClientProductService {
     public JSONObject getProductDetail(String productId){
 
         try {
-            String url = "http://10.10.105.100:18037/metadataapi/metadataQuery/getProductInfoByProductId";
-            System.out.println("对端link:" + url);
+//            String url = "http://10.10.105.100:18037/metadataapi/metadataQuery/getProductInfoByProductId";
+            System.out.println("对端link:" + MetaQueryUrl);
             HttpClient httpClient = new HttpClient();
             httpClient.getParams().setContentCharset("UTF-8");
-            PostMethod postMethod = new PostMethod(url);
+            PostMethod postMethod = new PostMethod(MetaQueryUrl);
             StringRequestEntity requestEntity = new StringRequestEntity("", "application/xml", "UTF-8");
             postMethod.setRequestEntity(requestEntity);
             postMethod.addRequestHeader("Authorization","Bearer eyJhbGciOiJIUzUxMiJ9.eyJyYW5kb21LZXkiOiJ2eHF6MXoiLCJzdWIiOiJsaXVib3dlbiIsImlhdCI6MTU2MTAyNzE2MH0.ZK0-pxesckdLtcQVEiyg3jq00i1ljvtE1rqHXhvf2wcQ9X7eO3pY0Ro1H1MNdFjpafVmMoNDx4fw_-pkBhp6Ew");
@@ -121,6 +120,8 @@ public class ClientProductServiceImpl implements IClientProductService {
             folderItems.setParentId(gisClientFolderList.get(i).getParentId());
             List<ClientFileInfo> clientFileInfoList = new ArrayList<>();
             clientFileInfoList = gisClientFileMapper.getProductListByFolderId(clientId,gisClientFolderList.get(i).getFolderId());
+            System.out.println(clientFileInfoList);
+
             List<FolderItems> folderItemsList1 = new ArrayList<>();
 
             for(ClientFileInfo clientFileInfo :clientFileInfoList){
@@ -132,6 +133,7 @@ public class ClientProductServiceImpl implements IClientProductService {
                 folderItems1.setDownloadUrl(clientFileInfo.getDownloadUrl());
                 folderItems1.setThumbUrl(clientFileInfo.getThumbUrl());
                 folderItems1.setLayerName(clientFileInfo.getLayerName());
+                folderItems1.setProductId(clientFileInfo.getProductId());
                 folderItemsList1.add(folderItems1);
             }
             folderItems.setChildren(folderItemsList1);
@@ -226,7 +228,7 @@ public class ClientProductServiceImpl implements IClientProductService {
         folderItems0.setId(1);
         folderItems0.setParentId(0);
         folderItems0.setName("普通光学影像");
-        List<ClientFileInfo> clientFileInfoList1 = gisClientFileMapper.getProductListByTppe(clientId,"普通光学影像");
+        List<ClientFileInfo> clientFileInfoList1 = gisClientFileMapper.getProductListByType(clientId,"普通光学影像");
         List<FolderItems> folderItemsList1 = new ArrayList<>();
         for(ClientFileInfo clientFileInfo :clientFileInfoList1){
             FolderItems folderItems1 = new FolderItems();
@@ -237,6 +239,7 @@ public class ClientProductServiceImpl implements IClientProductService {
             folderItems1.setDownloadUrl(clientFileInfo.getDownloadUrl());
             folderItems1.setThumbUrl(clientFileInfo.getThumbUrl());
             folderItems1.setLayerName(clientFileInfo.getLayerName());
+            folderItems1.setProductId(clientFileInfo.getProductId());
             folderItemsList1.add(folderItems1);
         }
         folderItems0.setChildren(folderItemsList1);
@@ -246,7 +249,7 @@ public class ClientProductServiceImpl implements IClientProductService {
         folderItems1.setId(2);
         folderItems1.setParentId(0);
         folderItems1.setName("夜光影像");
-        List<ClientFileInfo> clientFileInfoList2 = gisClientFileMapper.getProductListByTppe(clientId,"夜光影像");
+        List<ClientFileInfo> clientFileInfoList2 = gisClientFileMapper.getProductListByType(clientId,"夜光影像");
         List<FolderItems> folderItemsList2 = new ArrayList<>();
         for(ClientFileInfo clientFileInfo :clientFileInfoList2){
             FolderItems folderItems2 = new FolderItems();
@@ -257,6 +260,7 @@ public class ClientProductServiceImpl implements IClientProductService {
             folderItems2.setDownloadUrl(clientFileInfo.getDownloadUrl());
             folderItems2.setThumbUrl(clientFileInfo.getThumbUrl());
             folderItems2.setLayerName(clientFileInfo.getLayerName());
+            folderItems2.setProductId(clientFileInfo.getProductId());
             folderItemsList2.add(folderItems2);
         }
         folderItems1.setChildren(folderItemsList2);
@@ -266,7 +270,7 @@ public class ClientProductServiceImpl implements IClientProductService {
         folderItems2.setId(3);
         folderItems2.setParentId(0);
         folderItems2.setName("视频影像");
-        List<ClientFileInfo> clientFileInfoList3 = gisClientFileMapper.getProductListByTppe(clientId,"视频影像");
+        List<ClientFileInfo> clientFileInfoList3 = gisClientFileMapper.getProductListByType(clientId,"视频影像");
         List<FolderItems> folderItemsList3 = new ArrayList<>();
         for(ClientFileInfo clientFileInfo :clientFileInfoList3){
             FolderItems folderItems3 = new FolderItems();
@@ -277,6 +281,7 @@ public class ClientProductServiceImpl implements IClientProductService {
             folderItems3.setDownloadUrl(clientFileInfo.getDownloadUrl());
             folderItems3.setThumbUrl(clientFileInfo.getThumbUrl());
             folderItems3.setLayerName(clientFileInfo.getLayerName());
+            folderItems3.setProductId(clientFileInfo.getProductId());
             folderItemsList3.add(folderItems3);
         }
         folderItems2.setChildren(folderItemsList3);
@@ -286,7 +291,7 @@ public class ClientProductServiceImpl implements IClientProductService {
         folderItems3.setId(4);
         folderItems3.setParentId(0);
         folderItems3.setName("多光谱光学影像");
-        List<ClientFileInfo> clientFileInfoList4 = gisClientFileMapper.getProductListByTppe(clientId,"多光谱光学影像");
+        List<ClientFileInfo> clientFileInfoList4 = gisClientFileMapper.getProductListByType(clientId,"多光谱光学影像");
         List<FolderItems> folderItemsList4 = new ArrayList<>();
         for(ClientFileInfo clientFileInfo :clientFileInfoList4){
             FolderItems folderItems4 = new FolderItems();
@@ -297,6 +302,7 @@ public class ClientProductServiceImpl implements IClientProductService {
             folderItems4.setDownloadUrl(clientFileInfo.getDownloadUrl());
             folderItems4.setThumbUrl(clientFileInfo.getThumbUrl());
             folderItems4.setLayerName(clientFileInfo.getLayerName());
+            folderItems4.setProductId(clientFileInfo.getProductId());
             folderItemsList4.add(folderItems4);
         }
         folderItems3.setChildren(folderItemsList4);
@@ -331,6 +337,7 @@ public class ClientProductServiceImpl implements IClientProductService {
             folderItems1.setDownloadUrl(clientFileInfo.getDownloadUrl());
             folderItems1.setThumbUrl(clientFileInfo.getThumbUrl());
             folderItems1.setLayerName(clientFileInfo.getLayerName());
+            folderItems1.setProductId(clientFileInfo.getProductId());
             folderItemsList1.add(folderItems1);
         }
         folderItems0.setChildren(folderItemsList1);
@@ -351,6 +358,7 @@ public class ClientProductServiceImpl implements IClientProductService {
             folderItems2.setDownloadUrl(clientFileInfo.getDownloadUrl());
             folderItems2.setThumbUrl(clientFileInfo.getThumbUrl());
             folderItems2.setLayerName(clientFileInfo.getLayerName());
+            folderItems2.setProductId(clientFileInfo.getProductId());
             folderItemsList2.add(folderItems2);
         }
         folderItems1.setChildren(folderItemsList2);
@@ -371,6 +379,7 @@ public class ClientProductServiceImpl implements IClientProductService {
             folderItems3.setDownloadUrl(clientFileInfo.getDownloadUrl());
             folderItems3.setThumbUrl(clientFileInfo.getThumbUrl());
             folderItems3.setLayerName(clientFileInfo.getLayerName());
+            folderItems3.setProductId(clientFileInfo.getProductId());
             folderItemsList3.add(folderItems3);
         }
         folderItems2.setChildren(folderItemsList3);
@@ -460,9 +469,5 @@ public class ClientProductServiceImpl implements IClientProductService {
         }
 
     }
-    public StandardProductDetail getClientProductDetail(long clientId,int productId){
-        String realId = gisClientFileMapper.getProductIdbylogicid(clientId,productId);
-        StandardProductDetail standardProductDetail = metadataService.getStandardProductDetail(realId);
-        return standardProductDetail;
-    }
+
 }

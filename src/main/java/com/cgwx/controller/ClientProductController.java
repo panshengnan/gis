@@ -3,6 +3,8 @@ package com.cgwx.controller;
 import com.cgwx.aop.Permission;
 import com.cgwx.aop.result.Result;
 import com.cgwx.aop.result.ResultUtil;
+import com.cgwx.dao.GisClientFileMapper;
+import com.cgwx.dao.GisProductInfoMapper;
 import com.cgwx.data.dto.*;
 import com.cgwx.data.entity.GisProductInfo;
 import com.cgwx.data.entity.GisStandardProductInfo;
@@ -13,12 +15,14 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 @CrossOrigin
 @Controller
@@ -28,6 +32,12 @@ public class ClientProductController {
     IClientProductService iClientProductService;
     @Autowired
     IProductArchiveService iProductArchiveService;
+    @Autowired
+    GisClientFileMapper gisClientFileMapper;
+    @Autowired
+    GisProductInfoMapper pdmProductInfoMapper;
+    @Value("${MetaQueryHead}")
+    private String MetaQueryHead;//拼链接
 
     @RequestMapping(value = "/getProductDetail")
     @CrossOrigin(methods = RequestMethod.GET)
@@ -64,20 +74,23 @@ public class ClientProductController {
         return ResultUtil.success(clientId.toString());
     }
 
-    @Permission
     @RequestMapping(value = "/UpdateClientProductList")
     @CrossOrigin(methods = RequestMethod.GET)
     @ResponseBody
-    public Result UpdateClientProductList(@RequestParam(value = "json", required = true) String json) {
+    public Result UpdateClientProductList(@RequestParam(value = "json", required = true) String json) {//引接更新用户标准产品
         System.out.println("更新用户产品列表");
+        System.out.println(json);
         JSONObject jsonObject1 = JSONObject.fromObject(json);
         long clientId = Long.parseLong(jsonObject1.getString( "clientId"));
-       if(!iClientProductService.is_exist(clientId)){
+        if(!iClientProductService.is_exist(clientId)){
            System.out.println("初始化当前登录用户树结构文件夹！");
            iClientProductService.initFolder(clientId);
         }
-        String productId =jsonObject1.getString( "productId");
-        JSONObject jsonObject2 = getProductDetail(productId).getJSONObject("data");//调用77元数据查询
+        String  fname = jsonObject1.getString( "downloadUrl").trim();
+        String productId =fname.substring(fname.lastIndexOf('/')+1);
+
+        //String productId =jsonObject1.getString( "productId"); //jerry 没给，暂时通过下载链接确定iproductId 2019/09/23
+        JSONObject jsonObject2 = getProductDetail(productId).getJSONObject("data"); //调用77元数据查询
 
         //产品总表归档
         GisProductInfo gisProductInfo = new GisProductInfo();
@@ -100,7 +113,59 @@ public class ClientProductController {
         if(jsonObject2.containsKey("bandString")){
             gisStandardProductInfo.setBandString(jsonObject2.getString("bandString"));//当前字段不一定存在
         }
-        gisStandardProductInfo.setThumbnail("http://10.10.105.100:18037/metadataapi"+jsonObject2.getString("thumbnail"));
+        gisStandardProductInfo.setThumbnail(MetaQueryHead+jsonObject2.getString("thumbnail"));//MetaQueryHead="http://10.10.105.100:18037/metadataapi"
+        gisStandardProductInfo.setProductType(jsonObject2.getInt("productType"));
+        gisStandardProductInfo.setProductBand(jsonObject2.getString("productBand"));
+        gisStandardProductInfo.setRollSatelliteAngle(new BigDecimal(jsonObject2.getString("rollSatelliteAngle")));
+        gisStandardProductInfo.setSolarElevation(Float.valueOf(jsonObject2.getString("solarElevation")));
+        gisStandardProductInfo.setCenterLatitude(Float.valueOf(jsonObject2.getString("centerLatitude")));
+        gisStandardProductInfo.setCenterLongitude(Float.valueOf(jsonObject2.getString("centerLongitude")));
+
+        String geojson = jsonObject2.getString("imageGeo");
+        int stand_prod = iProductArchiveService.updateStandardProduct(gisStandardProductInfo,geojson);
+        if(stand_prod==0)
+            System.out.println("标准数据表已存在当前产品");
+        boolean success = iClientProductService.UpdateClientProduct(jsonObject1,jsonObject2);
+
+        if(success){
+            return ResultUtil.success("更新用户产品列表成功");
+        }else{
+            return ResultUtil.success("更新用户产品列表失败");
+        }
+    }
+    @RequestMapping(value = "/UpdateStandardProductList")
+    @CrossOrigin(methods = RequestMethod.GET)
+    @ResponseBody
+    public Result UpdateStandardProductList(@RequestParam(value = "json", required = true) String json) {//标准产品
+        System.out.println("更新用户产品列表");
+        System.out.println(json);
+        JSONObject jsonObject1 = JSONObject.fromObject(json);
+        long clientId = Long.parseLong(jsonObject1.getString( "clientId"));
+        String productId =jsonObject1.getString( "productId"); //jerry 没给，暂时通过下载链接确定iproductId 2019/09/23
+        JSONObject jsonObject2 = getProductDetail(productId).getJSONObject("data"); //调用77元数据查询
+
+        //产品总表归档
+        GisProductInfo gisProductInfo = new GisProductInfo();
+        gisProductInfo.setProductId(jsonObject2.getString("productId"));
+        gisProductInfo.setProductName(jsonObject2.getString("productId"));
+        gisProductInfo.setProductType(5);
+        int total_prod = iProductArchiveService.updateProductInfo(gisProductInfo);
+        if(total_prod==0)
+            System.out.println("总表已存在当前产品");
+        //标准产品归档
+        GisStandardProductInfo gisStandardProductInfo = new GisStandardProductInfo();
+        gisStandardProductInfo.setProductId(jsonObject2.getString("productId"));
+        gisStandardProductInfo.setSatelliteId(jsonObject2.getString("satelliteId"));
+        gisStandardProductInfo.setSensor(jsonObject2.getString("sensor"));
+        gisStandardProductInfo.setImagingTimeStr(jsonObject2.getString("imagingTime"));
+        gisStandardProductInfo.setImageGsd(new BigDecimal(jsonObject2.getString("imageGsd")));
+        gisStandardProductInfo.setCloudPercent(new BigDecimal(jsonObject2.getString("cloudPercent")));
+        gisStandardProductInfo.setProductQuality(jsonObject2.getString("productQuality"));
+        gisStandardProductInfo.setBandAmount(jsonObject2.getInt("bandAmount"));
+        if(jsonObject2.containsKey("bandString")){
+            gisStandardProductInfo.setBandString(jsonObject2.getString("bandString"));//当前字段不一定存在
+        }
+        gisStandardProductInfo.setThumbnail(MetaQueryHead+jsonObject2.getString("thumbnail"));//MetaQueryHead="http://10.10.105.100:18037/metadataapi"
         gisStandardProductInfo.setProductType(jsonObject2.getInt("productType"));
         gisStandardProductInfo.setProductBand(jsonObject2.getString("productBand"));
         gisStandardProductInfo.setRollSatelliteAngle(new BigDecimal(jsonObject2.getString("rollSatelliteAngle")));
@@ -131,6 +196,8 @@ public class ClientProductController {
         return ResultUtil.success(clientDataList);
     }
 
+
+
     @RequestMapping(value = "/getClientProductList")  //我的数据——三种展示方式
     @CrossOrigin(methods = RequestMethod.GET)
     @ResponseBody
@@ -159,13 +226,26 @@ public class ClientProductController {
 
     }
 
+//    @RequestMapping(value = "/test2")  //客户产品列表
+//    @CrossOrigin(methods = RequestMethod.GET)
+//    @ResponseBody
+//    public Result test2() {
+//        folderDto folderDto1 = new folderDto();
+//        long clientId = Long.parseLong("1169500391481835522");
+//        folderDto1.setItemsTree(iClientProductService.buildFolderTree(clientId));
+//        return ResultUtil.success(folderDto1);
+//
+//    }
+
+
     @RequestMapping(value = "/getClientProductDetail")  //我的数据详情
     @CrossOrigin(methods = RequestMethod.GET)
     @ResponseBody
     public Result getClientProductDetail(@RequestParam(value = "productId", required = true) int productId) {//1 按文件夹 2 按类别 3 按级别
         long clientId = iClientProductService.getClientId();
-        StandardProductDetail standardProductDetail = iClientProductService.getClientProductDetail(clientId,productId);
-        return ResultUtil.success(standardProductDetail);
+        String realId = gisClientFileMapper.getProductIdbylogicid(clientId,productId);
+        return ResultUtil.success("移动文件夹失败");
+
     }
 
     @RequestMapping(value = "/MoveFolder")  //移动
@@ -248,25 +328,25 @@ public class ClientProductController {
             return ResultUtil.success("移动文件失败");
     }
 
-    @RequestMapping(value = "/test2")  //客户产品列表
-    @CrossOrigin(methods = RequestMethod.GET)
-    @ResponseBody
-    public Result test2() {
-
-        List<FolderItems> folderItemsList = new ArrayList<>();
-        folderItemsList.add(new FolderItems(0,-1,"全部数据"));
-        folderItemsList.add(new FolderItems(1,0,"我的数据"));
-        folderItemsList.add(new FolderItems(2,0,"我的数据2"));
-        folderItemsList.add(new FolderItems(3,1,"我的数据3"));
-        folderItemsList.add(new FolderItems(4,3,"我的数据4"));
-        folderItemsList.add(new FolderItems(5,4,"我的数据5"));
-        folderItemsList.add(new FolderItems(6,2,"我的数据6"));
-        folderItemsList.add(new FolderItems(7,2,"我的数据7"));
-        List<FolderItems> item = iClientProductService.listToTree(folderItemsList);
-        folderDto folderDto = new folderDto();
-        folderDto.setItemsTree(item);
-        return ResultUtil.success(folderDto);
-    }
+//    @RequestMapping(value = "/test2")  //客户产品列表
+//    @CrossOrigin(methods = RequestMethod.GET)
+//    @ResponseBody
+//    public Result test2() {
+//
+//        List<FolderItems> folderItemsList = new ArrayList<>();
+//        folderItemsList.add(new FolderItems(0,-1,"全部数据"));
+//        folderItemsList.add(new FolderItems(1,0,"我的数据"));
+//        folderItemsList.add(new FolderItems(2,0,"我的数据2"));
+//        folderItemsList.add(new FolderItems(3,1,"我的数据3"));
+//        folderItemsList.add(new FolderItems(4,3,"我的数据4"));
+//        folderItemsList.add(new FolderItems(5,4,"我的数据5"));
+//        folderItemsList.add(new FolderItems(6,2,"我的数据6"));
+//        folderItemsList.add(new FolderItems(7,2,"我的数据7"));
+//        List<FolderItems> item = iClientProductService.listToTree(folderItemsList);
+//        folderDto folderDto = new folderDto();
+//        folderDto.setItemsTree(item);
+//        return ResultUtil.success(folderDto);
+//    }
     @RequestMapping(value = "/testTree")  //客户产品列表
     @CrossOrigin(methods = RequestMethod.GET)
     @ResponseBody
